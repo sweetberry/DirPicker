@@ -1,0 +1,73 @@
+<script type="text/x-handlebars-template">
+    <div class="well bs-component">
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>
+                    <i class="fa fa-folder-open" style="margin-right:1em;"></i>Dir Picker
+                    <span class="btn btn-default pull-right" data-toggle="collapse" data-target="#setting">
+                        <i class="fa fa-cogs"></i>
+                    </span>
+                </legend>
+                <div class="form-group">
+                    <label for="selectTemplate" class="col-sm-2 control-label">Template</label>
+
+                    <div class="col-sm-9">
+                        <input id="selectTemplate" type="text" class="form-control input-sm" value="<%= template %>">
+                    </div>
+                </div>
+                <% _.each(getUsedVariablesList(),function(variableRow){ %>
+                <div class="form-group">
+                    <label for="<%= variableRow.uid %>" class="col-sm-2 control-label"><%= _.escape(variableRow.name) %></label>
+
+                    <div class="col-sm-9">
+                        <% if(variableRow.list){ %>
+                        <!--suppress XmlDuplicatedId -->
+                        <input type="text" class="form-control input-sm js-variable-select" id="<%= variableRow.uid %>"
+                               data-variable-value="<%= variableRow.value %>"
+                               data-variable-name="<%= variableRow.name %>"
+                               value="<% var _listRow = _.find(variableRow.list,{val:variableRow.value}); if(_listRow){print(_listRow.label)} %>">
+                        <% }else{ %>
+                        <!--suppress XmlDuplicatedId -->
+                        <input type="text" class="form-control input-sm js-variable-input" id="<%= variableRow.uid %>"
+                               data-variable-name="<%= variableRow.name %>"
+                               data-variable-value="<%= variableRow.value %>"
+                               placeholder="<%= variableRow.name %>" value="<%= variableRow.value %>">
+                        <% } %>
+                    </div>
+                </div>
+                <% }) %>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-2">
+                        <div class="btn-group">
+                            <a class="btn btn-success js-open-btn <% if(!getEvaluatedPath().isExist){print('disabled')} %>"><i
+                                    class="fa fa-folder-open"
+                                    style="margin-right:0.5em;"></i>Open</a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-warning js-create-btn <% if(getEvaluatedPath().isExist || !getEvaluatedPath().isAbs){print('disabled')} %>"><i
+                                    class="glyphicon glyphicon-plus-sign"
+                                    style="margin-right:0.5em;"></i>Create</a>
+                        </div>
+                        <div class="btn-group">
+                            <a class="btn btn-info js-clip-btn"><i class="glyphicon glyphicon-paperclip"
+                                                                   style="margin-right:0.5em;"></i>Clipboard</a>
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+        </form>
+        <div class="alert alert-dismissible <% if(getEvaluatedPath().isExist){print('alert-success')}else{print('alert-warning')} %>"
+             style="margin-top:2em;">
+            <h4>
+                <i class="fa <% if ( getEvaluatedPath().isExist && !getEvaluatedPath().isFolder ){ print( 'fa-file' ) } else { print( 'fa-folder-open' ) } %>"
+                   style="margin-right:0.5em;"></i>Result
+                Path</h4>
+
+            <p class=" js-result-panel" style="word-break:break-all;">
+                <%= _.escape(getEvaluatedPath().path) %>
+            </p>
+        </div>
+    </div>
+
+</script>
