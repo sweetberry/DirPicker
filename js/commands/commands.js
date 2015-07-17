@@ -38,8 +38,8 @@ function parseSettingCollectionsToJsonObject () {
 }
 
 function margeJsonIntoCollections ( json ) {
-  if (json['templatesCollection']) {
-    _.each( json['templatesCollection'], function ( jsonTemplateRow ) {
+  if (json['templates']) {
+    _.each( json['templates'], function ( jsonTemplateRow ) {
       var existingModel = templatesCollection.findWhere( {name: jsonTemplateRow.name} );
       if (existingModel) {
         existingModel.save( jsonTemplateRow, {wait: true} );
@@ -48,8 +48,8 @@ function margeJsonIntoCollections ( json ) {
       }
     } );
   }
-  if (json['variablesCollection']) {
-    _.each( json['variablesCollection'], function ( jsonVariableRow ) {
+  if (json['variables']) {
+    _.each( json['variables'], function ( jsonVariableRow ) {
       var existingModel = variablesCollection.findWhere( {name: jsonVariableRow.name} );
       if (existingModel) {
         existingModel.save( jsonVariableRow, {wait: true} );
