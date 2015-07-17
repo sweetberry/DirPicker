@@ -48,43 +48,44 @@ var remote = require( 'remote' );
 var Menu = remote.require( 'menu' );
 var template = [
   {
-    label: 'Electron',
+    label: 'File',
     submenu: [
+      //{
+      //  label: 'About DirPicker',
+      //  selector: 'orderFrontStandardAboutPanel:'
+      //},
+      //{
+      //  type: 'separator'
+      //},
+      //{
+      //  label: 'Services',
+      //  submenu: []
+      //},
+      //{
+      //  type: 'separator'
+      //},
       {
-        label: 'About DirPicker',
-        selector: 'orderFrontStandardAboutPanel:'
+        label: 'Hide',
+        accelerator: 'CmdOrCtrl+H',
+        click: function () { remote.getCurrentWindow().hide(); }
       },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Services',
-        submenu: []
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Hide Electron',
-        accelerator: 'Command+H',
-        selector: 'hide:'
-      },
-      {
-        label: 'Hide Others',
-        accelerator: 'Command+Shift+H',
-        selector: 'hideOtherApplications:'
-      },
-      {
-        label: 'Show All',
-        selector: 'unhideAllApplications:'
-      },
-      {
-        type: 'separator'
-      },
+      //{
+      //  label: 'Hide Others',
+      //  accelerator: 'Command+Shift+H',
+      //  selector: 'hideOtherApplications:'
+      //},
+      //{
+      //  label: 'Show All',
+      //  selector: 'unhideAllApplications:'
+      //},
+      //{
+      //  type: 'separator'
+      //},
       {
         label: 'Quit',
-        accelerator: 'Command+Q',
-        selector: 'terminate:'
+        accelerator: 'CmdOrCtrl+Q',
+        click: function () { remote.getCurrentWindow().close(); }
+        //selector: 'terminate:'
       }
     ]
   },
@@ -93,36 +94,36 @@ var template = [
     submenu: [
       {
         label: 'Undo',
-        accelerator: 'Command+Z',
-        selector: 'undo:'
+        accelerator: 'CmdOrCtrl+Z',
+        click: function () { remote.getCurrentWindow().webContents.undo(); }
       },
       {
         label: 'Redo',
-        accelerator: 'Shift+Command+Z',
-        selector: 'redo:'
+        accelerator: 'Shift+CmdOrCtrl+Z',
+        click: function () { remote.getCurrentWindow().webContents.redo(); }
       },
       {
         type: 'separator'
       },
       {
         label: 'Cut',
-        accelerator: 'Command+X',
-        selector: 'cut:'
+        accelerator: 'CmdOrCtrl+X',
+        click: function () { remote.getCurrentWindow().webContents.cut(); }
       },
       {
         label: 'Copy',
-        accelerator: 'Command+C',
-        selector: 'copy:'
+        accelerator: 'CmdOrCtrl+C',
+        click: function () { remote.getCurrentWindow().webContents.copy(); }
       },
       {
         label: 'Paste',
-        accelerator: 'Command+V',
-        selector: 'paste:'
+        accelerator: 'CmdOrCtrl+V',
+        click: function () { remote.getCurrentWindow().webContents.paste(); }
       },
       {
         label: 'Select All',
-        accelerator: 'Command+A',
-        selector: 'selectAll:'
+        accelerator: 'CmdOrCtrl+A',
+        click: function () { remote.getCurrentWindow().webContents.selectAll(); }
       }
     ]
   },
@@ -131,12 +132,12 @@ var template = [
     submenu: [
       {
         label: 'Reload',
-        accelerator: 'Command+R',
+        accelerator: 'CmdOrCtrl+R',
         click: function () { remote.getCurrentWindow().reload(); }
       },
       {
         label: 'Toggle DevTools',
-        accelerator: 'Alt+Command+I',
+        accelerator: 'Alt+CmdOrCtrl+I',
         click: function () { remote.getCurrentWindow().toggleDevTools(); }
       }
     ]
@@ -146,27 +147,27 @@ var template = [
     submenu: [
       {
         label: 'Minimize',
-        accelerator: 'Command+M',
-        selector: 'performMiniaturize:'
+        accelerator: 'CmdOrCtrl+M',
+        click: function () { remote.getCurrentWindow().minimize(); }
       },
       {
         label: 'Close',
-        accelerator: 'Command+W',
-        selector: 'performClose:'
+        accelerator: 'CmdOrCtrl+W',
+        click: function () { remote.getCurrentWindow().close(); }
       },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Bring All to Front',
-        selector: 'arrangeInFront:'
-      }
+      //{
+      //  type: 'separator'
+      //},
+      //{
+      //  label: 'Bring All to Front',
+      //  selector: 'arrangeInFront:'
+      //}
     ]
   },
-  {
-    label: 'Help',
-    submenu: []
-  }
+  //{
+  //  label: 'Help',
+  //  submenu: []
+  //}
 ];
 
 menu = Menu.buildFromTemplate( template );
