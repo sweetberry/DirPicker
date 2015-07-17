@@ -151,6 +151,18 @@ var template = [
         click: function () { remote.getCurrentWindow().minimize(); }
       },
       {
+        label: 'Always On Top',
+        click: function () {
+          remote.getCurrentWindow().setAlwaysOnTop(true);//これで常に最前面
+        }
+      },
+      {
+        label: 'Cancel Always On Top',
+        click: function () {
+          remote.getCurrentWindow().setAlwaysOnTop(false);
+        }
+      },
+      {
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
         click: function () { remote.getCurrentWindow().close(); }
