@@ -1,47 +1,3 @@
-var jQuery = $ = require( 'jquery' );
-var _ = require( 'underscore' );
-
-/**
- *
- * @type {Backbone}
- */
-var Backbone = require( 'backbone' );
-
-require( './vender/bootstrap3-typeahead.js' );
-
-Backbone.$ = jQuery;
-
-/**
- * @name Backbone.Marionette
- * @type {Marionette}
- */
-require( 'backbone.marionette' );
-require( 'bootstrap' );
-require( './vender/jquery.sortable' );
-var App = new Backbone.Marionette.Application();
-App.addRegions( {
-  headerRegion: "#header",
-  mainRegion: "#main",
-  templatesRegion: "#templatesCollection",
-  variablesRegion: "#variablesCollection",
-  footerRegion: "#footer",
-  hideRegion: "#hide"
-} );
-App.on( "start", function () {
-
-  var dirPicker = new (require( './views/dirPicker' ));
-  App.mainRegion.show( dirPicker );
-  //
-  var templatesPref = new (require( './views/dirPickerSettingTemplates' ));
-  App.templatesRegion.show( templatesPref );
-  //
-  var variablesPref = new (require( './views/dirPickerSettingVariables' ));
-  App.variablesRegion.show( variablesPref );
-
-  Backbone.history.start();
-} );
-
-App.start();
 
 //AppMenu定義
 var remote = require( 'remote' );
@@ -166,7 +122,7 @@ var template = [
         label: 'Close',
         accelerator: 'CmdOrCtrl+W',
         click: function () { remote.getCurrentWindow().close(); }
-      },
+      }
       //{
       //  type: 'separator'
       //},
@@ -175,13 +131,56 @@ var template = [
       //  selector: 'arrangeInFront:'
       //}
     ]
-  },
+  }
   //{
   //  label: 'Help',
   //  submenu: []
   //}
 ];
 
-menu = Menu.buildFromTemplate( template );
+Menu.setApplicationMenu( Menu.buildFromTemplate( template ) );
 
-Menu.setApplicationMenu( menu );
+var jQuery = $ = require( 'jquery' );
+var _ = require( 'underscore' );
+
+/**
+ *
+ * @type {Backbone}
+ */
+var Backbone = require( 'backbone' );
+
+require( './vender/bootstrap3-typeahead.js' );
+
+Backbone.$ = jQuery;
+
+/**
+ * @name Backbone.Marionette
+ * @type {Marionette}
+ */
+require( 'backbone.marionette' );
+require( 'bootstrap' );
+require( './vender/jquery.sortable' );
+var App = new Backbone.Marionette.Application();
+App.addRegions( {
+  headerRegion: "#header",
+  mainRegion: "#main",
+  templatesRegion: "#templatesCollection",
+  variablesRegion: "#variablesCollection",
+  footerRegion: "#footer",
+  hideRegion: "#hide"
+} );
+App.on( "start", function () {
+
+  var dirPicker = new (require( './views/dirPicker' ));
+  App.mainRegion.show( dirPicker );
+  //
+  var templatesPref = new (require( './views/dirPickerSettingTemplates' ));
+  App.templatesRegion.show( templatesPref );
+  //
+  var variablesPref = new (require( './views/dirPickerSettingVariables' ));
+  App.variablesRegion.show( variablesPref );
+
+  Backbone.history.start();
+} );
+
+App.start();
