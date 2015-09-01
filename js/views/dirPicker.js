@@ -10,8 +10,7 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
    */
   model: require( '../models/dirPickerAppState' ),
   modelEvents: {
-    'change': 'render',
-    'invalid': 'render'
+    'change': 'render'
   },
   ui: {
     selectTemplate: '#selectTemplate',
@@ -42,7 +41,7 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
         return _self.model.getUsedVariablesList();
       },
       getEvaluatedPath: function () {
-        return _self.model.getEvaluatedPath()
+        return _self.model.getEvaluatedPath();
       }
     }
   },

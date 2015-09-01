@@ -38,6 +38,7 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
 
   validate: function ( attributes ) {
     if (attributes.template && !templates.findWhere( {name: attributes.template} )) {
+      alert("No template!");
       return "No template!";
     }
   },
