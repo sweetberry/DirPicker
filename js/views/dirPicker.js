@@ -26,6 +26,7 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
     'change @ui.selectTemplate': 'onChangeTemplate',
     //'change @ui.variableSelect': 'onChangeSelect',
     'change @ui.variableInput': 'onChangeVariable',
+    'keyup @ui.variableInput': 'onKeyUpVariable',
     'click @ui.openBtn': 'onClickOpen',
     'click @ui.createBtn': 'onClickCreate',
     'click @ui.clipBtn': 'onClickClip'
@@ -83,8 +84,7 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
         }
       } );
 
-    } )
-
+    } );
   },
 
   onChangeTemplate: function () {
@@ -101,6 +101,36 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
     this.setValues();
     this.render();
   },
+
+  onKeyUpVariable: function ( e ) {
+    var difference = 0;
+    var element = e.target;
+
+    if (e.keyCode == 38) {
+      difference = 1;
+    } else if (e.keyCode == 40) {
+      difference = -1;
+    } else if (e.keyCode == 13) {
+      this.render();
+    } else {
+      return;
+    }
+    var targetVal = element.value;
+    //console.log( "targetVal:", targetVal );
+    var lastPaddingRegexp = /\d+$/;
+    var lastPadding = lastPaddingRegexp.exec( targetVal );
+    //console.log( "lastPadding:", lastPadding );
+    if (lastPadding) {
+      var dstPadding = parseInt( lastPadding ) + difference;
+      //console.log( "dst:", targetVal.replace( lastPaddingRegexp, dstPadding ) );
+      if (dstPadding >= 0) {
+        element.dataset.variableValue = targetVal.replace( lastPaddingRegexp, dstPadding );
+        this.setValues();
+        $( element ).val( targetVal.replace( lastPaddingRegexp, dstPadding ) )
+      }
+    }
+  },
+
   onClickOpen: function () {
     this.model.openPath();
   },
