@@ -1,10 +1,9 @@
-
 //AppMenu定義
 var remote = require( 'remote' );
 var Menu = remote.require( 'menu' );
 var template = [
   {
-    label: 'File',
+    label  : 'File',
     submenu: [
       //{
       //  label: 'About DirPicker',
@@ -21,9 +20,9 @@ var template = [
       //  type: 'separator'
       //},
       {
-        label: 'Hide',
+        label      : 'Hide',
         accelerator: 'CmdOrCtrl+H',
-        click: function () { remote.getCurrentWindow().hide(); }
+        click      : function () { remote.getCurrentWindow().hide(); }
       },
       //{
       //  label: 'Hide Others',
@@ -38,90 +37,90 @@ var template = [
       //  type: 'separator'
       //},
       {
-        label: 'Quit',
+        label      : 'Quit',
         accelerator: 'CmdOrCtrl+Q',
-        click: function () { remote.getCurrentWindow().close(); }
+        click      : function () { remote.getCurrentWindow().close(); }
         //selector: 'terminate:'
       }
     ]
   },
   {
-    label: 'Edit',
+    label  : 'Edit',
     submenu: [
       {
-        label: 'Undo',
+        label      : 'Undo',
         accelerator: 'CmdOrCtrl+Z',
-        click: function () { remote.getCurrentWindow().webContents.undo(); }
+        click      : function () { remote.getCurrentWindow().webContents.undo(); }
       },
       {
-        label: 'Redo',
+        label      : 'Redo',
         accelerator: 'Shift+CmdOrCtrl+Z',
-        click: function () { remote.getCurrentWindow().webContents.redo(); }
+        click      : function () { remote.getCurrentWindow().webContents.redo(); }
       },
       {
         type: 'separator'
       },
       {
-        label: 'Cut',
+        label      : 'Cut',
         accelerator: 'CmdOrCtrl+X',
-        click: function () { remote.getCurrentWindow().webContents.cut(); }
+        click      : function () { remote.getCurrentWindow().webContents.cut(); }
       },
       {
-        label: 'Copy',
+        label      : 'Copy',
         accelerator: 'CmdOrCtrl+C',
-        click: function () { remote.getCurrentWindow().webContents.copy(); }
+        click      : function () { remote.getCurrentWindow().webContents.copy(); }
       },
       {
-        label: 'Paste',
+        label      : 'Paste',
         accelerator: 'CmdOrCtrl+V',
-        click: function () { remote.getCurrentWindow().webContents.paste(); }
+        click      : function () { remote.getCurrentWindow().webContents.paste(); }
       },
       {
-        label: 'Select All',
+        label      : 'Select All',
         accelerator: 'CmdOrCtrl+A',
-        click: function () { remote.getCurrentWindow().webContents.selectAll(); }
+        click      : function () { remote.getCurrentWindow().webContents.selectAll(); }
       }
     ]
   },
   {
-    label: 'View',
+    label  : 'View',
     submenu: [
       {
-        label: 'Reload',
+        label      : 'Reload',
         accelerator: 'CmdOrCtrl+R',
-        click: function () { remote.getCurrentWindow().reload(); }
+        click      : function () { remote.getCurrentWindow().reload(); }
       },
       {
-        label: 'Toggle DevTools',
+        label      : 'Toggle DevTools',
         accelerator: 'Alt+CmdOrCtrl+I',
-        click: function () { remote.getCurrentWindow().toggleDevTools(); }
+        click      : function () { remote.getCurrentWindow().toggleDevTools(); }
       }
     ]
   },
   {
-    label: 'Window',
+    label  : 'Window',
     submenu: [
       {
-        label: 'Minimize',
+        label      : 'Minimize',
         accelerator: 'CmdOrCtrl+M',
-        click: function () { remote.getCurrentWindow().minimize(); }
+        click      : function () { remote.getCurrentWindow().minimize(); }
       },
       {
         label: 'Always On Top',
         click: function () {
-          remote.getCurrentWindow().setAlwaysOnTop(true);//これで常に最前面
+          remote.getCurrentWindow().setAlwaysOnTop( true );//これで常に最前面
         }
       },
       {
         label: 'Cancel Always On Top',
         click: function () {
-          remote.getCurrentWindow().setAlwaysOnTop(false);
+          remote.getCurrentWindow().setAlwaysOnTop( false );
         }
       },
       {
-        label: 'Close',
+        label      : 'Close',
         accelerator: 'CmdOrCtrl+W',
-        click: function () { remote.getCurrentWindow().close(); }
+        click      : function () { remote.getCurrentWindow().close(); }
       }
       //{
       //  type: 'separator'
@@ -159,15 +158,15 @@ Backbone.$ = jQuery;
  */
 require( 'backbone.marionette' );
 require( 'bootstrap' );
-require( './vender/jquery.sortable' );
+require( 'html5sortable' );
 var App = new Backbone.Marionette.Application();
 App.addRegions( {
-  headerRegion: "#header",
-  mainRegion: "#main",
+  headerRegion   : "#header",
+  mainRegion     : "#main",
   templatesRegion: "#templatesCollection",
   variablesRegion: "#variablesCollection",
-  footerRegion: "#footer",
-  hideRegion: "#hide"
+  footerRegion   : "#footer",
+  hideRegion     : "#hide"
 } );
 App.on( "start", function () {
 
