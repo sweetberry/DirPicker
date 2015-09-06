@@ -183,3 +183,12 @@ App.on( "start", function () {
 } );
 
 App.start();
+
+//import, export ボタン実装。ベタ打ちです。
+var command = require( './commands/commands.js' );
+jQuery( ".js-export-btn" ).on( 'click', function ( e ) {
+  command.saveSetting();
+} );
+jQuery( ".js-import-btn" ).on( 'click', function ( e ) {
+  command.loadSetting();
+} );
