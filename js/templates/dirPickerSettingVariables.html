@@ -2,9 +2,14 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <span class="btn btn-primary pull-right js-variable-add-btn"><i class="fa fa-plus-circle"></i> add</span>
-            <h4>Variables List</h4>
+            <h4 style="margin-top:0;margin-bottom:0;">Variables List
+            <span class="btn btn-primary" data-toggle="collapse" data-target="#variables_list_container">
+                <i class="fa fa-list"></i>
+                <span class="badge"><%= getVariablesCount() %></span>
+            </span>
+            </h4>
         </div>
-        <div class="panel-body js-variable-list-container">
+        <div id="variables_list_container" class="panel-body js-variable-list-container collapse in">
 
         </div>
     </div>

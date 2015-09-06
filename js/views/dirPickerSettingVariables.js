@@ -23,10 +23,20 @@ var ViewsDirPickerSettingVariables = Backbone.Marionette.CompositeView.extend( {
     'mouseenter @ui.handle': 'sortStart',
     'mouseleave @ui.handle': 'sortDestroy'
   },
+  templateHelpers: function () {
+    var _self = this;
+    //noinspection JSUnusedGlobalSymbols
+    return {
+      getVariablesCount: function () {
+        return _self.collection.length;
+      }
+    }
+  },
+
   sortStart: function () {
     var _self = this;
     this.ui.childViewContainer.sortable( {
-      //forcePlaceholderSize: true,
+      forcePlaceholderSize: true,
       //placeholderClass: 'col-lg-4 col-md-6',
       handle: '.js-variable-handle'
     } ).bind( 'sortupdate', function () {

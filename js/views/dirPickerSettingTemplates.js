@@ -1,5 +1,5 @@
 var templateHtml = require( '../templates/dirPickerSettingTemplates.html' );
-var ChildView = require( './dirPickerSettingTemplate' );
+var ChildView = require( './dirPickerSettingTemplateRow' );
 
 //noinspection JSUnusedGlobalSymbols
 var ViewsDirPickerSettingTemplates = Backbone.Marionette.CompositeView.extend( {
@@ -7,36 +7,46 @@ var ViewsDirPickerSettingTemplates = Backbone.Marionette.CompositeView.extend( {
   childView: ChildView,
   template: templateHtml,
   className: "",
-  childViewContainer: '.js-template-list-container',
+  childViewContainer: '.js-template-table-container',
   collectionEvents: {
     'change': 'render',
     'sync': 'render'
   },
   ui: {
-    childViewContainer: '.js-template-list-container',
+    childViewContainer: '.js-template-table-container',
     addBtn: '.js-template-add-btn',
-    importBtn: '.js-import-btn',
-    exportBtn: '.js-export-btn'
+    //importBtn: '.js-import-btn',
+    //exportBtn: '.js-export-btn'
   },
   events: {
     'click @ui.addBtn': 'onAddClick',
-    'click @ui.importBtn': 'onImportClick',
-    'click @ui.exportBtn': 'onExportClick'
+    //'click @ui.importBtn': 'onImportClick',
+    //'click @ui.exportBtn': 'onExportClick'
   },
-  onImportClick: function () {
-    require( '../commands/commands' ).loadSetting();
-  },
-  onExportClick: function () {
-    require( '../commands/commands' ).saveSetting();
+  //onImportClick: function () {
+  //  require( '../commands/commands' ).loadSetting();
+  //},
+  //onExportClick: function () {
+  //  require( '../commands/commands' ).saveSetting();
+  //},
+
+  templateHelpers: function () {
+    var _self = this;
+    //noinspection JSUnusedGlobalSymbols
+    return {
+      getTemplatesCount: function () {
+        return _self.collection.length;
+      }
+    }
   },
   onRender: function () {
     var _self = this;
-    if(this.ui.childViewContainer.sortable){
-      this.ui.childViewContainer.sortable('destroy');
+    if (this.ui.childViewContainer.sortable) {
+      this.ui.childViewContainer.sortable( 'destroy' );
     }
     this.ui.childViewContainer.sortable( {
       forcePlaceholderSize: true,
-      //placeholderClass: 'col-lg-4 col-md-6',
+      items: 'tr' ,
       handle: '.js-template-handle'
     } ).bind( 'sortupdate', function () {
       _self.updateItemSortIndex( _self.ui.childViewContainer.find( '.js-template-model-id' ) );

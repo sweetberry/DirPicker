@@ -1,0 +1,20 @@
+<!--suppress HtmlUnknownTag -->
+<script type="text/x-handlebars-template">
+    <td class="js-template-model-id" data-model-id="<%= id %>">
+        <span class="js-template-handle" data-toggle="tooltip"
+              data-placement="left" title="" data-original-title="sort"><i class="fa fa-sort"></i> </span>
+    </td>
+    <td style="white-space:nowrap;">
+        <span class="text-success js-template-name" style="width:95%;text-align:left;"><%= _.escape(name) %></span>
+        <input class="form-control hide input-sm js-template-name-input" type="text" value="<%= name %>">
+    </td>
+    <td style="white-space:nowrap;">
+        <span class="small"><i class="js-template-path"><%= _.escape(path) %></i></span>
+        <input class="form-control input-sm hide js-template-path-input" type="text" value="<%= path %>">
+    </td>
+    <td>
+        <span class="js-template-del-btn">
+            <i class="fa fa-trash fa-lg"></i>
+        </span>
+    </td>
+</script>
