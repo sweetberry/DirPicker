@@ -5,33 +5,45 @@ var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
   /**
    * @type {ModelsDirPickerTemplate}
    */
-  model: undefined,
-  template: templateHtml,
-  tagName: 'tr',
-  ui: {
-    name: '.js-template-name',
+  model          : undefined,
+  template       : templateHtml,
+  tagName        : 'tr',
+  ui             : {
+    name     : '.js-template-name',
     nameInput: '.js-template-name-input',
-    path: '.js-template-path',
+    path     : '.js-template-path',
     pathInput: '.js-template-path-input',
-    delBtn: '.js-template-del-btn',
-    handle: '.js-template-handle'
+    delBtn   : '.js-template-del-btn',
+    handle   : '.js-template-handle'
   },
-  events: {
-    'click @ui.name': 'onClickName',
-    'keyup @ui.nameInput': 'onKeyupNameInput',
+  events         : {
+    'click @ui.name'        : 'onClickName',
+    'keyup @ui.nameInput'   : 'onKeyupNameInput',
     'focusout @ui.nameInput': 'changeNameInput',
-    'click @ui.path': 'onClickPath',
-    'keyup @ui.pathInput': 'onKeyupPathInput',
+    'click @ui.path'        : 'onClickPath',
+    'keyup @ui.pathInput'   : 'onKeyupPathInput',
     'focusout @ui.pathInput': 'changePathInput',
-    'click @ui.delBtn': 'onClickDelBtn'
+    'click @ui.delBtn'      : 'onClickDelBtn'
   },
-  modelEvents: {
+  modelEvents    : {
     'change': 'render'
   },
-  onRender: function () {
+  templateHelpers: function () {
+    var _self = this;
+    //noinspection JSUnusedGlobalSymbols
+    return {
+      getColoredTemplatePath: function () {
+
+        //今のところは設定済み変数との切り分けはしてません。
+        return _.escape( _self.model.get( 'path' ) ).replace( /(&lt;.*?&gt;)/g, "<span class='text-warning'>$1</span>" );
+      }
+    }
+  },
+
+  onRender        : function () {
     //this.ui.handle.tooltip();
   },
-  onBeforeDestroy: function () {
+  onBeforeDestroy : function () {
     //this.ui.handle.tooltip( 'destroy' );
   },
   onKeyupNameInput: function ( e ) {
@@ -44,25 +56,25 @@ var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
       this.changePathInput();
     }
   },
-  onClickName: function () {
+  onClickName     : function () {
     this.ui.name.addClass( 'hide' );
     this.ui.nameInput.removeClass( 'hide' );
     this.ui.nameInput.focus();
     //this.ui.delBtn.addClass( 'hide' );
   },
-  onClickPath: function () {
+  onClickPath     : function () {
     this.ui.path.addClass( 'hide' );
     this.ui.pathInput.removeClass( 'hide' );
     this.ui.pathInput.focus();
   },
-  onClickDelBtn: function () {
+  onClickDelBtn   : function () {
     this.model.destroy();
   },
-  changeNameInput: function () {
+  changeNameInput : function () {
     this.model.save( 'name', this.ui.nameInput.val(), {silent: false} );
     //this.model.trigger( 'change' );
   },
-  changePathInput: function () {
+  changePathInput : function () {
     this.model.save( 'path', this.ui.pathInput.val(), {silent: false} );
     //this.model.trigger( 'change' );
   }
