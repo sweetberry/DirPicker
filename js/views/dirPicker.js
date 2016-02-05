@@ -1,46 +1,49 @@
 var template = require( '../templates/dirPicker.html' );
 var _ = require( 'underscore' );
+var open = require( 'open' );
 
 //noinspection JSUnusedGlobalSymbols
 module.exports = Backbone.Marionette.LayoutView.extend( {
-  className: "js-view-dir-picker",
-  template: template,
+  className      : "js-view-dir-picker",
+  template       : template,
   /**
    * @type {ModelsDirPickerAppState}
    */
-  model: require( '../models/dirPickerAppState' ),
-  modelEvents: {
+  model          : require( '../models/dirPickerAppState' ),
+  modelEvents    : {
     'change': 'render'
   },
-  ui: {
+  ui             : {
     selectTemplate: '#selectTemplate',
-    resultPanel: '.js-result-panel',
-    variableInput: '.js-variable-input',
+    resultPanel   : '.js-result-panel',
+    variableInput : '.js-variable-input',
     variableSelect: '.js-variable-select',
-    openBtn: '.js-open-btn',
-    createBtn: '.js-create-btn',
-    clipBtn: '.js-clip-btn'
+    openBtn       : '.js-open-btn',
+    createBtn     : '.js-create-btn',
+    clipBtn       : '.js-clip-btn',
+    pathSeg       : '.js-result-path-seg'
   },
-  events: {
+  events         : {
     'change @ui.selectTemplate': 'onChangeTemplate',
     //'change @ui.variableSelect': 'onChangeSelect',
-    'change @ui.variableInput': 'onChangeVariable',
-    'keyup @ui.variableInput': 'onKeyUpVariable',
-    'click @ui.openBtn': 'onClickOpen',
-    'click @ui.createBtn': 'onClickCreate',
-    'click @ui.clipBtn': 'onClickClip'
+    'change @ui.variableInput' : 'onChangeVariable',
+    'keyup @ui.variableInput'  : 'onKeyUpVariable',
+    'click @ui.openBtn'        : 'onClickOpen',
+    'click @ui.createBtn'      : 'onClickCreate',
+    'click @ui.clipBtn'        : 'onClickClip',
+    'dblclick @ui.pathSeg'     : 'onClickPathSeg'
   },
   templateHelpers: function () {
     var _self = this;
     //noinspection JSUnusedGlobalSymbols
     return {
-      getTemplates: function () {
+      getTemplates        : function () {
         return _self.model.getTemplates();
       },
       getUsedVariablesList: function () {
         return _self.model.getUsedVariablesList();
       },
-      getEvaluatedPath: function () {
+      getEvaluatedPath    : function () {
         return _self.model.getEvaluatedPath();
       }
     }
@@ -54,10 +57,10 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
       this.ui.selectTemplate.typeahead( 'destroy' );
     }
     this.ui.selectTemplate.typeahead( {
-      source: this.model.getTemplates(),
-      items: 'all',
+      source         : this.model.getTemplates(),
+      items          : 'all',
       showHintOnFocus: true,
-      minLength: 0
+      minLength      : 0
     } );
 
     //VariableのautoComplete
@@ -71,12 +74,12 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
       var targetUid = $( element ).attr( "id" );
       var targetListRow = _.find( usedVariablesList, {uid: targetUid} );
       $( element ).typeahead( {
-        source: targetListRow.list,
-        items: 'all',
+        source         : targetListRow.list,
+        items          : 'all',
         showHintOnFocus: true,
-        minLength: 0,
-        displayText: function ( item ) {return item.label},
-        afterSelect: function ( item ) {
+        minLength      : 0,
+        displayText    : function ( item ) {return item.label},
+        afterSelect    : function ( item ) {
           element.dataset.variableValue = item.val;
           _self.setValues();
           _self.render();
@@ -89,7 +92,7 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
   onChangeTemplate: function () {
     this.model.set( {'template': this.ui.selectTemplate.val()}, {validate: true} );
   },
-  onChangeSelect: function () {
+  onChangeSelect  : function () {
     console.log( 'onChangeSelect' );
     this.render();
   },
@@ -130,17 +133,21 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
     }
   },
 
-  onClickOpen: function () {
+  onClickPathSeg: function ( e ) {
+    open( e.target.dataset.path );
+  },
+
+  onClickOpen  : function () {
     this.model.openPath();
   },
   onClickCreate: function () {
     this.model.createPath();
     this.render();
   },
-  onClickClip: function () {
+  onClickClip  : function () {
     this.model.clipPath();
   },
-  setValues: function () {
+  setValues    : function () {
     console.log( 'setValues' );
     var _self = this;
     var targetElement = this.ui.variableSelect.add( this.ui.variableInput );
