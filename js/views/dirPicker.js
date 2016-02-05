@@ -50,6 +50,14 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
   },
 
   onRender: function () {
+
+    //ここじゃない気もする....
+    document.ondragover = document.ondrop = function ( e ) {
+      // イベントの伝搬を止めて、アプリケーションのHTMLとファイルが差し替わらないようにする
+      e.preventDefault();
+      return false;
+    };
+
     this.model.save();
 
     //templateのautoComplete
