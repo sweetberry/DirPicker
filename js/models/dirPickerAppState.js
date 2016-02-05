@@ -31,14 +31,14 @@ var variables = require( '../collections/dirPickerVariables' );
  */
 var ModelsDirPickerAppState = Backbone.Model.extend( {
   localStorage: new Backbone.LocalStorage( "dirPickerAppState" ),
-  defaults: {
+  defaults    : {
     template: undefined,
-    values: {}//{name<string>:, value:<string>}
+    values  : {}//{name<string>:, value:<string>}
   },
 
   validate: function ( attributes ) {
     if (attributes.template && !templates.findWhere( {name: attributes.template} )) {
-      alert("No template!");
+      alert( "No template!" );
       return "No template!";
     }
   },
@@ -107,6 +107,19 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
     var dst = getFolderStats( templatePath );
     dst.path = path.normalize( templatePath );
     dst.isAbs = path.isAbsolute( templatePath );
+
+    dst.subDirLinkedPath = createSubDirLinkedPath( dst.path );
+    function createSubDirLinkedPath ( pathString ) {
+      var sepPathArray = pathString.split( path.sep );
+      var resPathArray = [];
+      while (sepPathArray.length) {
+        resPathArray.unshift( sepPathArray.join( path.sep ) );
+        sepPathArray.pop();
+      }
+      return _.map( _.zip( pathString.split( path.sep ), resPathArray ), function ( raw ) {return '<span class="js-result-path-seg" data-path="' + raw[1] + '">' + raw[0] + '</span>'} ).join( path.sep )
+
+    }
+
     return dst;
   },
 
