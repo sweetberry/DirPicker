@@ -56,7 +56,7 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
           sepPathArray.pop();
         }
         return _.map( _.zip( pathString.split( path.sep ), resPathArray ), function ( raw ) {
-          return '<span class="js-result-path-seg" data-path="' + raw[1] + '">' + _.escape( raw[0] ) + '</span>'
+          return '<span class="js-result-path-seg" data-path="' + raw[1] + '">' + raw[0] + '</span>'
         } ).join( path.sep );
 
       }
