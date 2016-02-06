@@ -1,6 +1,7 @@
 var template = require( '../templates/dirPicker.html' );
 var _ = require( 'underscore' );
 var open = require( 'open' );
+var path = require( 'path' );
 
 //noinspection JSUnusedGlobalSymbols
 module.exports = Backbone.Marionette.LayoutView.extend( {
@@ -45,6 +46,19 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
       },
       getEvaluatedPath    : function () {
         return _self.model.getEvaluatedPath();
+      },
+      getSubDirLinkedPath : function () {
+        var pathString = _self.model.getEvaluatedPath().path;
+        var sepPathArray = pathString.split( path.sep );
+        var resPathArray = [];
+        while (sepPathArray.length) {
+          resPathArray.unshift( sepPathArray.join( path.sep ) );
+          sepPathArray.pop();
+        }
+        return _.map( _.zip( pathString.split( path.sep ), resPathArray ), function ( raw ) {
+          return '<span class="js-result-path-seg" data-path="' + raw[1] + '">' + raw[0] + '</span>'
+        } ).join( path.sep );
+
       }
     }
   },
