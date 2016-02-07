@@ -55,10 +55,10 @@ var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
   },
 
   onRender        : function () {
-    //this.ui.handle.tooltip();
+    this.ui.handle.tooltip();
   },
   onBeforeDestroy : function () {
-    //this.ui.handle.tooltip( 'destroy' );
+    this.ui.handle.tooltip( 'destroy' );
   },
   onKeyupNameInput: function ( e ) {
     if (e.which == 13) {
