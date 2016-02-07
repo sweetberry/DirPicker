@@ -3,32 +3,22 @@ var ChildView = require( './dirPickerSettingTemplateRow' );
 
 //noinspection JSUnusedGlobalSymbols
 var ViewsDirPickerSettingTemplates = Backbone.Marionette.CompositeView.extend( {
-  collection: require( '../collections/dirPickerTemplates' ),//templatesCollection
-  childView: ChildView,
-  template: templateHtml,
-  className: "",
+  collection        : require( '../collections/dirPickerTemplates' ),//templatesCollection
+  childView         : ChildView,
+  template          : templateHtml,
+  className         : "",
   childViewContainer: '.js-template-table-container',
-  collectionEvents: {
-    'change': 'render',
-    'sync': 'render'
-  },
-  ui: {
+  reorderOnSort     : true,
+  ui                : {
     childViewContainer: '.js-template-table-container',
-    addBtn: '.js-template-add-btn',
-    //importBtn: '.js-import-btn',
-    //exportBtn: '.js-export-btn'
+    addBtn            : '.js-template-add-btn',
+    handle            : '.js-template-handle'
   },
-  events: {
-    'click @ui.addBtn': 'onAddClick',
-    //'click @ui.importBtn': 'onImportClick',
-    //'click @ui.exportBtn': 'onExportClick'
+  events            : {
+    'click @ui.addBtn'     : 'onAddClick',
+    'mouseenter @ui.handle': 'sortStart',
+    'mouseleave @ui.handle': 'sortDestroy'
   },
-  //onImportClick: function () {
-  //  require( '../commands/commands' ).loadSetting();
-  //},
-  //onExportClick: function () {
-  //  require( '../commands/commands' ).saveSetting();
-  //},
 
   templateHelpers: function () {
     var _self = this;
@@ -39,23 +29,34 @@ var ViewsDirPickerSettingTemplates = Backbone.Marionette.CompositeView.extend( {
       }
     }
   },
-  onRender: function () {
+
+  sortStart  : function () {
     var _self = this;
+    this.ui.childViewContainer.sortable( {
+      forcePlaceholderSize: true,
+      items               : 'tr',
+      handle              : '.js-template-handle'
+    } ).bind( 'sortupdate', function () {
+      _self.updateItemSortIndex( _self.ui.childViewContainer.find( '.js-template-model-id' ) );
+    } ).bind( 'sortstart', function ( e, ui ) {
+      ui.item.css( 'display', 'block' )
+    } ).bind( 'sortstop', function ( e, ui ) {
+      ui.item.css( 'display', '' )
+    } );
+  },
+  sortDestroy: function () {
     if (this.ui.childViewContainer.sortable) {
       this.ui.childViewContainer.sortable( 'destroy' );
     }
-    this.ui.childViewContainer.sortable( {
-      forcePlaceholderSize: true,
-      items: 'tr' ,
-      handle: '.js-template-handle'
-    } ).bind( 'sortupdate', function () {
-      _self.updateItemSortIndex( _self.ui.childViewContainer.find( '.js-template-model-id' ) );
-    } );
+  },
+
+  onRender       : function () {
+
   },
   onBeforeDestroy: function () {
-    this.ui.childViewContainer.sortable( 'destroy' );
+    this.sortDestroy();
   },
-  onAddClick: function () {
+  onAddClick     : function () {
     this.collection.create( {}, {wait: true} );
     this.onRender();
   },
