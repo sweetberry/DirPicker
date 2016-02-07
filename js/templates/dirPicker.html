@@ -63,7 +63,7 @@
             <h4>
                 <i class="fa <% if ( getEvaluatedPath().isExist && !getEvaluatedPath().isFolder ){ print( 'fa-file' ) } else { print( 'fa-folder-open' ) } %>"
                    style="margin-right:0.5em;"></i>Result Path</h4>
-            <p class=" js-result-panel" style="word-break:break-all;">
+            <p class=" js-result-panel" style="word-break:break-all;-webkit-user-select:text;">
                 <%= (getSubDirLinkedPath()) %>
             </p>
         </div>
