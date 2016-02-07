@@ -1,4 +1,5 @@
 var templateHtml = require( '../templates/dirPickerSettingTemplateRow.html' );
+var dirPickerVariablesCollection = require( '../collections/dirPickerVariables' );
 
 //noinspection JSUnusedGlobalSymbols
 var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
@@ -30,12 +31,25 @@ var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
   },
   templateHelpers: function () {
     var _self = this;
+    var escapedTagRegexp = /(&lt;.*?&gt;)/g;
     //noinspection JSUnusedGlobalSymbols
     return {
       getColoredTemplatePath: function () {
 
-        //今のところは設定済み変数との切り分けはしてません。
-        return _.escape( _self.model.get( 'path' ) ).replace( /(&lt;.*?&gt;)/g, "<span class='text-warning'>$1</span>" );
+        if (dirPickerVariablesCollection) {//設定済み変数がある場合
+          var definedVariableNames = dirPickerVariablesCollection.pluck( 'name' );
+          return _.escape( _self.model.get( 'path' ) ).replace( escapedTagRegexp, function ( match ) {
+            if (_.find( definedVariableNames, function ( definedVarName ) {
+                  return '&lt;' + definedVarName + '&gt;' == match;
+                } )) {
+              return "<span class='text-success'>" + match + "</span>"
+            } else {
+              return "<span class='text-warning'>" + match + "</span>"
+            }
+          } );
+        }
+        //設定済み変数がない場合
+        return _.escape( _self.model.get( 'path' ) ).replace( escapedTagRegexp, "<span class='text-warning'>$1</span>" );
       }
     }
   },
