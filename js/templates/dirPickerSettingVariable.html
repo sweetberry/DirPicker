@@ -1,12 +1,15 @@
+<!--suppress HtmlFormInputWithoutLabel -->
 <script type="text/x-handlebars-template">
     <div class="panel panel-primary js-variable-model-id" data-model-id="<%= id %>">
         <div class=" input-group">
-            <span class="input-group-addon js-variable-handle text-success" data-toggle="tooltip" data-placement="left" title="" data-original-title="sort"><i class="fa fa-sort"></i> </span>
+            <span class="input-group-addon js-variable-handle text-success hidden-md hidden-lg" data-toggle="tooltip"
+                  data-placement="left" title="" data-original-title="sort"><i class="fa fa-sort"></i> </span>
             <!--<span class="input-group-addon"><i class="fa fa-bookmark"></i> </span>-->
             <span class="input-group-addon js-variable-row-list-close-btn text-success"><i
-                    class="fa fa-list"></i> <span class="badge js-variable-list-num-badge"><%= list.length %></span></span>
+                    class="fa fa-list"></i> <span
+                    class="badge js-variable-list-num-badge"><%= list.length %></span></span>
             <span class="input-group-addon text-success js-variable-name"
-            style="width:95%;text-align:left;"><%= _.escape(name) %></span>
+                  style="width:95%;text-align:left;"><%= _.escape(name) %></span>
             <input class="form-control hide input-sm js-variable-name-input" type="text" value="<%= name %>">
             <!--<span class="input-group-addon js-variable-list-open-btn text-success hide"><i class="fa fa-list"></i> open</span>-->
             <span class="input-group-addon js-variable-row-add-btn text-success"><i
