@@ -13,12 +13,17 @@ var ViewsDirPickerSettingVariables = Backbone.Marionette.CompositeView.extend( {
   ui                : {
     childViewContainer: '.js-variable-list-container',
     addBtn            : '.js-variable-add-btn',
-    handle            : '.js-variable-handle'
+    handle            : '.js-variable-handle',
+    badge             : '.js-variable-num-badge'
   },
   events            : {
     'click @ui.addBtn'     : 'onClickAddBtn',
     'mouseenter @ui.handle': 'sortStart',
     'mouseleave @ui.handle': 'sortDestroy'
+  },
+  collectionEvents  : {
+    'add'   : 'badgeUpdate',
+    'remove': 'badgeUpdate'
   },
   templateHelpers   : function () {
     var _self = this;
@@ -55,7 +60,7 @@ var ViewsDirPickerSettingVariables = Backbone.Marionette.CompositeView.extend( {
   onBeforeDestroy: function () {
     this.sortDestroy();
   },
-  onClickAddBtn     : function () {
+  onClickAddBtn  : function () {
     this.collection.create( {}, {wait: true} );
   },
 
@@ -70,7 +75,14 @@ var ViewsDirPickerSettingVariables = Backbone.Marionette.CompositeView.extend( {
       //noinspection JSUnresolvedVariable
       _self.collection.get( element.dataset.modelId ).save( 'sort', index );
     } );
-  }
+  },
+
+  /**
+   * バッジの数字だけ更新
+   */
+  badgeUpdate: function () {
+    this.ui.badge.text( this.collection.length );
+  },
 
 } );
 
