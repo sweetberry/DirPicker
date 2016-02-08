@@ -84,13 +84,19 @@ var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
   onClickDelBtn   : function () {
     this.model.destroy();
   },
+  resetInputHidden: function () {
+    this.ui.name.removeClass( 'hide' );
+    this.ui.nameInput.addClass( 'hide' );
+    this.ui.path.removeClass( 'hide' );
+    this.ui.pathInput.addClass( 'hide' );
+  },
   changeNameInput : function () {
     this.model.save( 'name', this.ui.nameInput.val(), {silent: false} );
-    //this.model.trigger( 'change' );
+    this.resetInputHidden();
   },
   changePathInput : function () {
     this.model.save( 'path', this.ui.pathInput.val(), {silent: false} );
-    //this.model.trigger( 'change' );
+    this.resetInputHidden();
   }
 
 } );
