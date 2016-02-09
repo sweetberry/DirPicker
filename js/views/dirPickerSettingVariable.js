@@ -92,8 +92,10 @@ var ViewsDirPickerSettingVariable = Backbone.Marionette.CompositeView.extend( {
     this.model.destroy();
   },
   changeNameInput    : function () {
-    this.model.save( 'name', this.ui.nameInput.val(), {silent: false} );
-    //this.model.trigger( 'change' );
+    if (this.model.save( 'name', this.ui.nameInput.val(), {silent: false} )) {
+      // saveが実行されなければ…(変更が無い、もしくはerror)
+      this.redrawName();
+    }
   },
   onClickAddBtn      : function () {
     this.collection.add( {}, {wait: true} );
