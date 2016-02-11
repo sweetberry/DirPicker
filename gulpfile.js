@@ -5,6 +5,7 @@ var webpack = require( 'webpack-stream' );
 var webpackConfig = require( './webpack.config.js' );
 var destDirPath = './dest/';
 var electron = require( 'gulp-atom-electron' );
+var zip = require( 'gulp-vinyl-zip' );
 var runSequence = require( 'run-sequence' );
 var electronPrebuilt = require( 'electron-prebuilt' );
 var childProcess = require( 'child_process' );
@@ -77,22 +78,22 @@ gulp.task( 'webpack-build', function () {
 gulp.task( 'electron-build-mac', function () {
   return gulp.src( './dest/**' )
       .pipe( electron( {
-        version: '0.36.7',
-        platform: 'darwin',
+        version   : '0.36.7',
+        platform  : 'darwin',
         darwinIcon: './icons/DirPicker.icns'
       } ) )
-      .pipe( electron.zfsdest( 'dist/' + packageJson.name + '_mac.zip' ) );
+      .pipe( zip.dest( 'dist/' + packageJson.name + '_mac.zip' ) )
 } );
 
 gulp.task( 'electron-build-win', function () {
   return gulp.src( './dest/**' )
       .pipe( electron( {
-        version: '0.36.7',
-        platform: 'win32',
-        arch: 'ia32',
-        winIcon: './icons/DirPicker.ico',
+        version    : '0.36.7',
+        platform   : 'win32',
+        arch       : 'ia32',
+        winIcon    : './icons/DirPicker.ico',
         companyName: 'SweetberryStudio',
-        copyright: '(C) 2015 SweetberryStudio'
+        copyright  : '(C) 2015 SweetberryStudio'
       } ) )
-      .pipe( electron.zfsdest( 'dist/' + packageJson.name + '_win32.zip' ) );
+      .pipe( zip.dest( 'dist/' + packageJson.name + '_win32.zip' ) );
 } );
