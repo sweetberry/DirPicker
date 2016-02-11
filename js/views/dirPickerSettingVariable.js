@@ -1,93 +1,103 @@
 var templateHtml = require( '../templates/dirPickerSettingVariable.html' );
-var ChildView = require( './dirPickerSettingVariableRow' );
+var DirPickerSettingVariableRowView = require( './dirPickerSettingVariableRow' );
 
 //noinspection JSUnusedGlobalSymbols
 var ViewsDirPickerSettingVariable = Backbone.Marionette.CompositeView.extend( {
-  model: undefined,//variableModel
-  collection: undefined,
-  template: templateHtml,
-  childView: ChildView,
+  model             : undefined,//variableModel
+  collection        : undefined,//variableModel.listCollection
+  template          : templateHtml,
+  childView         : DirPickerSettingVariableRowView,
   childViewContainer: '.js-variable-row-list-container',
-  className: 'col-lg-4 col-md-6',
-  ui: {
-    name: '.js-variable-name',
-    nameInput: '.js-variable-name-input',
-    delBtn: '.js-variable-del-btn',
-    handle: '.js-variable-handle',
+  className         : 'col-lg-4 col-md-6',
+  reorderOnSort     : true,
+  ui                : {
+    name              : '.js-variable-name',
+    nameInput         : '.js-variable-name-input',
+    delBtn            : '.js-variable-del-btn',
+    handle            : '.js-variable-handle',
+    rowHandle         : '.js-variable-row-handle',
     childViewContainer: '.js-variable-row-list-container',
-    addBtn: '.js-variable-row-add-btn',
-    closeBtn: '.js-variable-row-list-close-btn',
-    badge: '.js-variable-list-num-badge',
-    collapse: '.collapse'
+    addBtn            : '.js-variable-row-add-btn',
+    closeBtn          : '.js-variable-row-list-close-btn',
+    badge             : '.js-variable-list-num-badge',
+    collapse          : '.collapse'
   },
-  events: {
-    'click @ui.name': 'onClickName',
-    'keyup @ui.nameInput': 'onKeyupNameInput',
-    'focusout @ui.nameInput': 'changeNameInput',
-    'click @ui.delBtn': 'onClickDelBtn',
-    'click @ui.addBtn': 'onClickAddBtn',
-    'click @ui.closeBtn': 'onClickCloseBtn'
+  events            : {
+    'click @ui.name'          : 'onClickName',
+    'keyup @ui.nameInput'     : 'onKeyupNameInput',
+    'focusout @ui.nameInput'  : 'changeNameInput',
+    'click @ui.delBtn'        : 'onClickDelBtn',
+    'click @ui.addBtn'        : 'onClickAddBtn',
+    'click @ui.closeBtn'      : 'onClickCloseBtn',
+    'mouseenter @ui.rowHandle': 'sortStart',
+    'mouseleave @ui.rowHandle': 'sortDestroy'
 
   },
-  modelEvents: {
+  modelEvents       : {
     'change:name': 'redrawName',
     'badgeUpdate': 'badgeUpdate'
   },
+
   /**
    * renderし直したくないんで
    */
-  badgeUpdate: function () {
+  badgeUpdate        : function () {
     this.ui.badge.text( this.collection.length );
   },
-  onClickCloseBtn: function () {
+  onClickCloseBtn    : function () {
     this.ui.collapse.collapse( 'toggle' );
   },
-  initialize: function () {
+  initialize         : function () {
     //this.debugEvents('VariableView');
     this.collection = this.model.listCollection
   },
-  onRender: function () {
+  sortStart          : function () {
     var _self = this;
+    this.ui.childViewContainer.sortable( {
+      forcePlaceholderSize: true,
+      handle              : '.js-variable-row-handle'
+    } ).bind( 'sortupdate', function () {
+      //console.log("variablesSort");
+      _self.updateItemSortIndex( _self.ui.childViewContainer.find( '.js-variable-row-model-id' ) );
+    } );
+  },
+  sortDestroy        : function () {
     if (this.ui.childViewContainer.sortable) {
       this.ui.childViewContainer.sortable( 'destroy' );
     }
-    this.ui.childViewContainer.sortable( {
-      forcePlaceholderSize: true,
-      //placeholderClass: 'col-lg-4 col-md-6',
-      handle: '.js-variable-row-handle'
-    } ).bind( 'sortupdate', function ( e ) {
-      e.stopPropagation();
-      _self.updateItemSortIndex( _self.ui.childViewContainer.find( '.js-variable-row-model-id' ) );
-    } );
+  },
+  onRender           : function () {
     this.ui.handle.tooltip();
   },
-  onBeforeDestroy: function () {
+  onBeforeDestroy    : function () {
     this.ui.handle.tooltip( 'destroy' );
-    this.ui.childViewContainer.sortable( 'destroy' );
+    this.sortDestroy()
   },
-  onKeyupNameInput: function ( e ) {
+  onKeyupNameInput   : function ( e ) {
     if (e.which == 13) {
       this.ui.nameInput.blur();
     }
   },
-  onClickName: function () {
+  onClickName        : function () {
     this.ui.name.addClass( 'hide' );
     this.ui.nameInput.removeClass( 'hide' );
     this.ui.nameInput.focus();
   },
-  redrawName: function () {
+  redrawName         : function () {
     this.ui.name.html( _.escape( this.model.get( 'name' ) ) );
     this.ui.name.removeClass( 'hide' );
     this.ui.nameInput.addClass( 'hide' );
   },
-  onClickDelBtn: function () {
+  onClickDelBtn      : function () {
     this.model.destroy();
   },
-  changeNameInput: function () {
-    this.model.save( 'name', this.ui.nameInput.val(), {silent: false} );
-    //this.model.trigger( 'change' );
+  changeNameInput    : function () {
+    if (this.model.save( 'name', this.ui.nameInput.val(), {silent: false} )) {
+      // saveが実行されなければ…(変更が無い、もしくはerror)
+      this.redrawName();
+    }
   },
-  onClickAddBtn: function () {
+  onClickAddBtn      : function () {
     this.collection.add( {}, {wait: true} );
     this.ui.collapse.collapse( 'show' );
     this.onRender();

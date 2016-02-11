@@ -115,7 +115,7 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
     this.model.set( {'template': this.ui.selectTemplate.val()}, {validate: true} );
   },
   onChangeSelect  : function () {
-    console.log( 'onChangeSelect' );
+    //console.log( 'onChangeSelect' );
     this.render();
   },
 
@@ -170,7 +170,7 @@ module.exports = Backbone.Marionette.LayoutView.extend( {
     this.model.clipPath();
   },
   setValues    : function () {
-    console.log( 'setValues' );
+    //console.log( 'setValues' );
     var _self = this;
     var targetElement = this.ui.variableSelect.add( this.ui.variableInput );
     _.each( targetElement, function ( element ) {

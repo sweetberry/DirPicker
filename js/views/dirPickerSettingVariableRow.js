@@ -32,6 +32,9 @@ var ViewsDirPickerSettingVariableRow = Backbone.Marionette.ItemView.extend( {
     };
   },
   onRender: function () {
+    this.$el.css( {
+      'padding': '5px 0px'
+    } );
     this.ui.handle.tooltip();
   },
   onBeforeDestroy: function () {
