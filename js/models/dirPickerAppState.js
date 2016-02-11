@@ -3,7 +3,6 @@
 const path = require( 'path' );
 const open = require( 'open' );
 const fs = require( 'fs' );
-const mkdirp = require( 'mkdirp' );
 const command = require( '../commands/commands.js' );
 
 const _ = require( 'underscore' );
@@ -103,10 +102,7 @@ const ModelsDirPickerAppState = Backbone.Model.extend( {
         templatePath = templatePath.split( '<' + varName + '>' ).join( values[varName] || '' );
       }
     } );
-    const dst = getFolderStats( templatePath );
-    dst.path = path.normalize( templatePath );
-    dst.isAbs = path.isAbsolute( templatePath );
-    return dst;
+    return getFolderStats( templatePath );
   },
 
   setValue: function ( name, val ) {
@@ -122,12 +118,7 @@ const ModelsDirPickerAppState = Backbone.Model.extend( {
 
   createPath: function () {
     var targetPath = this.getEvaluatedPath().path;
-    try {
-      mkdirp.sync( targetPath );
-      open( targetPath );
-    } catch (e) {
-      command.sendErrorToMain( e );
-    }
+    command.createDirectory( targetPath );
   },
 
   clipPath: function () {
@@ -160,7 +151,7 @@ appState.save();
 /**
  *
  * @param path
- * @returns {object} {isExist:boolean, isFolder:boolean}
+ * @returns {object} {isExist:boolean, isFolder:boolean, path: string,isAbs :boolean}
  */
 function getFolderStats ( path ) {
   const dest = {};
@@ -173,5 +164,7 @@ function getFolderStats ( path ) {
       dest.isExist = false;
     }
   }
+  dest.path = path.normalize( templatePath );
+  dest.isAbs = path.isAbsolute( templatePath );
   return dest;
 }

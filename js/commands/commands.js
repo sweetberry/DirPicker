@@ -4,6 +4,8 @@ const ipcRenderer = require( 'electron' ).ipcRenderer;
 const clipboard = require( 'electron' ).clipboard;
 const path = require( 'path' );
 const fs = require( 'fs' );
+const mkdirp = require( 'mkdirp' );
+
 
 const templatesCollection = require( '../collections/dirPickerTemplates' );//templatesCollection
 const variablesCollection = require( '../collections/dirPickerVariables' );//variablesCollection
@@ -33,8 +35,17 @@ module.exports.writeClipboard = function ( text ) {
   clipboard.writeText( text );
 };
 
-module.exports.sendErrorToMain = function ( e ) {
+module.exports.sendErrorToMain = function sendErrorToMain ( e ) {
   ipcRenderer.sendSync( 'error-message', ' (;´Д`)y─┛~~ \n\n' + e.message );
+};
+
+module.exports.createDirectory = function ( targetPath ) {
+  try {
+    mkdirp.sync( targetPath );
+    open( targetPath );
+  } catch (e) {
+    sendErrorToMain( e );
+  }
 };
 
 function createSettingJson () {
