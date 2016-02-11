@@ -140,7 +140,7 @@ var template = [
 Menu.setApplicationMenu( Menu.buildFromTemplate( template ) );
 
 var jQuery = $ = require( 'jquery' );
-var _ = require( 'underscore' );
+//var _ = require( 'underscore' );
 
 /**
  *
@@ -179,16 +179,18 @@ App.on( "start", function () {
   var variablesPref = new (require( './views/dirPickerSettingVariables' ));
   App.variablesRegion.show( variablesPref );
 
+  //import, export ボタン実装。ベタ打ちです。
+  var command = require( './commands/commands.js' );
+  //noinspection JSUnusedLocalSymbols
+  jQuery( ".js-export-btn" ).on( 'click', function ( e ) {
+    command.saveSetting();
+  } );
+  //noinspection JSUnusedLocalSymbols
+  jQuery( ".js-import-btn" ).on( 'click', function ( e ) {
+    command.loadSetting();
+  } );
+
   Backbone.history.start();
 } );
 
 App.start();
-
-//import, export ボタン実装。ベタ打ちです。
-var command = require( './commands/commands.js' );
-jQuery( ".js-export-btn" ).on( 'click', function ( e ) {
-  command.saveSetting();
-} );
-jQuery( ".js-import-btn" ).on( 'click', function ( e ) {
-  command.loadSetting();
-} );

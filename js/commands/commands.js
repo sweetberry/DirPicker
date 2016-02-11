@@ -1,4 +1,4 @@
-var ipc = require( 'ipc' );
+var ipcRenderer = require( 'electron' ).ipcRenderer;
 var path = require( 'path' );
 var fs = require( 'fs' );
 
@@ -6,14 +6,14 @@ var templatesCollection = require( '../collections/dirPickerTemplates' );//templ
 var variablesCollection = require( '../collections/dirPickerVariables' );//variablesCollection
 
 module.exports.saveSetting = function () {
-  var newPath = ipc.sendSync( 'get-setting-file-save-path' );
+  var newPath = ipcRenderer.sendSync( 'get-setting-file-save-path' );
   if (newPath) {
     fs.writeFile( newPath, JSON.stringify( parseSettingCollectionsToJsonObject(), null, '  ' ) );
   }
 };
 
 module.exports.loadSetting = function () {
-  var newPath = ipc.sendSync( 'get-setting-file-load-path' )[0];
+  var newPath = ipcRenderer.sendSync( 'get-setting-file-load-path' )[0];
   if (newPath) {
     try {
       var data = fs.readFileSync( newPath, 'utf8' );
@@ -21,7 +21,7 @@ module.exports.loadSetting = function () {
         margeJsonIntoCollections( JSON.parse( data ) );
       }
     } catch (e) {
-      ipc.sendSync( 'error-message', 'jsonファイルエラーです。\n' + e.message );
+      ipcRenderer.sendSync( 'error-message', 'jsonファイルエラーです。\n' + e.message );
     }
   }
 };

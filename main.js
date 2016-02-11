@@ -9,32 +9,32 @@ var mainWindow = null;
 var app = require( 'app' );  // Module to control application life.
 
 var dialog = require( 'dialog' );
-var ipc = require( 'ipc' );
+var ipcMain = require( 'electron' ).ipcMain;
 
 var dir_home = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
 var dir_desktop = require( "path" ).join( dir_home, "Desktop", "dirPickerSetting.json" );
 
 // エラー表示後終了
-ipc.on( 'error-message', function ( event, arg ) {
+ipcMain.on( 'error-message', function ( event, arg ) {
   dialog.showErrorBox( "Error", arg );
   event.returnValue = true;
 } );
 
-ipc.on( 'get-setting-file-save-path', function ( event, defaultPath ) {
+ipcMain.on( 'get-setting-file-save-path', function ( event, defaultPath ) {
 
   dialog.showSaveDialog( {
-    title: "設定ファイルの保存先を指定してください",
+    title      : "設定ファイルの保存先を指定してください",
     defaultPath: defaultPath || dir_desktop
   }, function ( res ) {
     event.returnValue = res || false;
   } );
 } );
 
-ipc.on( 'get-setting-file-load-path', function ( event, defaultPath ) {
+ipcMain.on( 'get-setting-file-load-path', function ( event, defaultPath ) {
   dialog.showOpenDialog( {
-    title: "設定ファイルを選択してください",
+    title      : "設定ファイルを選択してください",
     defaultPath: defaultPath || dir_desktop,
-    filters: [
+    filters    : [
       {name: 'Custom File Type', extensions: ['json']}
     ]
   }, function ( res ) {
@@ -55,7 +55,7 @@ app.on( 'ready', function () {
 
   // Create the browser window.
   mainWindow = new BrowserWindow( {
-    width: 800,
+    width : 800,
     height: 600
   } );
 

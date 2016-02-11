@@ -3,7 +3,7 @@ var open = require( 'open' );
 var fs = require( 'fs' );
 var mkdirp = require( 'mkdirp' );
 var clipboard = require( 'clipboard' );
-var ipc = require( 'ipc' );
+var ipcRenderer = require( 'electron' ).ipcRenderer;
 
 var _ = require( 'underscore' );
 var jQuery = $ = require( 'jquery' );
@@ -127,7 +127,7 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
       mkdirp.sync( targetPath );
       open( targetPath );
     } catch (e) {
-      ipc.sendSync( 'error-message', ' (;´Д`)y─┛~~ \n\n' + e.message );
+      ipcRenderer.sendSync( 'error-message', ' (;´Д`)y─┛~~ \n\n' + e.message );
     }
   },
 
