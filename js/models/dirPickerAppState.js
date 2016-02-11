@@ -4,7 +4,7 @@ const path = require( 'path' );
 const open = require( 'open' );
 const fs = require( 'fs' );
 const mkdirp = require( 'mkdirp' );
-const clipboard = require('electron').clipboard;
+const command = require( '../commands/commands.js' );
 const ipcRenderer = require( 'electron' ).ipcRenderer;
 
 const _ = require( 'underscore' );
@@ -132,8 +132,7 @@ const ModelsDirPickerAppState = Backbone.Model.extend( {
   },
 
   clipPath: function () {
-    //noinspection JSUnresolvedFunction
-    clipboard.writeText( this.getEvaluatedPath().path );
+    command.writeClipboard( this.getEvaluatedPath().path );
   },
 
   /**

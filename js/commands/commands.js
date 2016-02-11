@@ -1,24 +1,27 @@
-var ipcRenderer = require( 'electron' ).ipcRenderer;
-var path = require( 'path' );
-var fs = require( 'fs' );
+"use strict";
 
-var templatesCollection = require( '../collections/dirPickerTemplates' );//templatesCollection
-var variablesCollection = require( '../collections/dirPickerVariables' );//variablesCollection
+const ipcRenderer = require( 'electron' ).ipcRenderer;
+const clipboard = require( 'electron' ).clipboard;
+const path = require( 'path' );
+const fs = require( 'fs' );
+
+const templatesCollection = require( '../collections/dirPickerTemplates' );//templatesCollection
+const variablesCollection = require( '../collections/dirPickerVariables' );//variablesCollection
 
 module.exports.saveSetting = function () {
-  var newPath = ipcRenderer.sendSync( 'get-setting-file-save-path' );
+  const newPath = ipcRenderer.sendSync( 'get-setting-file-save-path' );
   if (newPath) {
-    fs.writeFile( newPath, JSON.stringify( parseSettingCollectionsToJsonObject(), null, '  ' ) );
+    fs.writeFile( newPath, JSON.stringify( createSettingJson(), null, '  ' ) );
   }
 };
 
 module.exports.loadSetting = function () {
-  var newPath = ipcRenderer.sendSync( 'get-setting-file-load-path' )[0];
+  const newPath = ipcRenderer.sendSync( 'get-setting-file-load-path' )[0];
   if (newPath) {
     try {
       var data = fs.readFileSync( newPath, 'utf8' );
       if (data) {
-        margeJsonIntoCollections( JSON.parse( data ) );
+        parseSettingJson( JSON.parse( data ) );
       }
     } catch (e) {
       ipcRenderer.sendSync( 'error-message', 'jsonファイルエラーです。\n' + e.message );
@@ -26,8 +29,12 @@ module.exports.loadSetting = function () {
   }
 };
 
-function parseSettingCollectionsToJsonObject () {
-  var dstJson = {};
+module.exports.writeClipboard = function ( text ) {
+  clipboard.writeText( text );
+};
+
+function createSettingJson () {
+  const dstJson = {};
   dstJson.templates = _.map( templatesCollection.toJSON(), function ( template ) {
     return _.pick( template, 'name', 'path' );
   } );
@@ -37,10 +44,10 @@ function parseSettingCollectionsToJsonObject () {
   return dstJson;
 }
 
-function margeJsonIntoCollections ( json ) {
+function parseSettingJson ( json ) {
   if (json['templates']) {
     _.each( json['templates'], function ( jsonTemplateRow ) {
-      var existingModel = templatesCollection.findWhere( {name: jsonTemplateRow.name} );
+      const existingModel = templatesCollection.findWhere( {name: jsonTemplateRow.name} );
       if (existingModel) {
         existingModel.save( jsonTemplateRow, {wait: true} );
       } else {
@@ -50,7 +57,7 @@ function margeJsonIntoCollections ( json ) {
   }
   if (json['variables']) {
     _.each( json['variables'], function ( jsonVariableRow ) {
-      var existingModel = variablesCollection.findWhere( {name: jsonVariableRow.name} );
+      const existingModel = variablesCollection.findWhere( {name: jsonVariableRow.name} );
       if (existingModel) {
         existingModel.save( jsonVariableRow, {wait: true} );
       } else {
