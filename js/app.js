@@ -1,7 +1,9 @@
+"use strict";
+
 //AppMenu定義
-var remote = require( 'remote' );
-var Menu = remote.require( 'menu' );
-var template = [
+const remote = require( 'remote' );
+const Menu = remote.require( 'menu' );
+const template = [
   {
     label  : 'File',
     submenu: [
@@ -139,27 +141,14 @@ var template = [
 
 Menu.setApplicationMenu( Menu.buildFromTemplate( template ) );
 
-var jQuery = $ = require( 'jquery' );
-//var _ = require( 'underscore' );
-
-/**
- *
- * @type {Backbone}
- */
-var Backbone = require( 'backbone' );
-
-require( './vender/bootstrap3-typeahead.js' );
-
-Backbone.$ = jQuery;
-
-/**
- * @name Backbone.Marionette
- * @type {Marionette}
- */
+const jQuery = $ = require( 'jquery' );
+const Backbone = require( 'backbone' );
 require( 'backbone.marionette' );
 require( 'bootstrap' );
+require( 'bootstrap-3-typeahead' );
 require( 'html5sortable' );
-var App = new Backbone.Marionette.Application();
+
+const App = new Backbone.Marionette.Application();
 App.addRegions( {
   headerRegion   : "#header",
   mainRegion     : "#main",
