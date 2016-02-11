@@ -1,18 +1,17 @@
-//var process = require('process');
+"use strict";
+const BrowserWindow = require( 'browser-window' );  // Module to create native browser window.
 
-var BrowserWindow = require( 'browser-window' );  // Module to create native browser window.
 // Report crashes to our server.
 require( 'crash-reporter' ).start();
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
-var mainWindow = null;
-var app = require( 'app' );  // Module to control application life.
+let mainWindow = null;
 
-var dialog = require( 'dialog' );
-var ipcMain = require( 'electron' ).ipcMain;
+const app = require( 'app' );  // Module to control application life.
+const dialog = require( 'dialog' );
+const ipcMain = require( 'electron' ).ipcMain;
 
-var dir_home = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
-var dir_desktop = require( "path" ).join( dir_home, "Desktop", "dirPickerSetting.json" );
 
 // エラー表示後終了
 ipcMain.on( 'error-message', function ( event, arg ) {
@@ -20,11 +19,11 @@ ipcMain.on( 'error-message', function ( event, arg ) {
   event.returnValue = true;
 } );
 
+const presetSettingJsonPath = require( "path" ).join( app.getPath( 'desktop' ), "dirPickerSetting.json" );
 ipcMain.on( 'get-setting-file-save-path', function ( event, defaultPath ) {
-
   dialog.showSaveDialog( {
     title      : "設定ファイルの保存先を指定してください",
-    defaultPath: defaultPath || dir_desktop
+    defaultPath: defaultPath || presetSettingJsonPath
   }, function ( res ) {
     event.returnValue = res || false;
   } );
@@ -33,7 +32,7 @@ ipcMain.on( 'get-setting-file-save-path', function ( event, defaultPath ) {
 ipcMain.on( 'get-setting-file-load-path', function ( event, defaultPath ) {
   dialog.showOpenDialog( {
     title      : "設定ファイルを選択してください",
-    defaultPath: defaultPath || dir_desktop,
+    defaultPath: defaultPath || presetSettingJsonPath,
     filters    : [
       {name: 'Custom File Type', extensions: ['json']}
     ]
@@ -44,9 +43,7 @@ ipcMain.on( 'get-setting-file-load-path', function ( event, defaultPath ) {
 
 // Quit when all windows are closed.
 app.on( 'window-all-closed', function () {
-  //if (process.platform != 'darwin') {
   app.quit();
-  //}
 } );
 
 // This method will be called when atom-shell has done everything
