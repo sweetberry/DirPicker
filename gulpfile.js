@@ -77,7 +77,7 @@ gulp.task( 'webpack-build', function () {
 gulp.task( 'electron-build-mac', function () {
   return gulp.src( './dest/**' )
       .pipe( electron( {
-        version: '0.29.2',
+        version: '0.36.7',
         platform: 'darwin',
         darwinIcon: './icons/DirPicker.icns'
       } ) )
@@ -87,7 +87,7 @@ gulp.task( 'electron-build-mac', function () {
 gulp.task( 'electron-build-win', function () {
   return gulp.src( './dest/**' )
       .pipe( electron( {
-        version: '0.29.2',
+        version: '0.36.7',
         platform: 'win32',
         arch: 'ia32',
         winIcon: './icons/DirPicker.ico',
