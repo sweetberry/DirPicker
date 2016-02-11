@@ -5,7 +5,6 @@ const open = require( 'open' );
 const fs = require( 'fs' );
 const mkdirp = require( 'mkdirp' );
 const command = require( '../commands/commands.js' );
-const ipcRenderer = require( 'electron' ).ipcRenderer;
 
 const _ = require( 'underscore' );
 const Backbone = require( 'backbone' );
@@ -127,7 +126,7 @@ const ModelsDirPickerAppState = Backbone.Model.extend( {
       mkdirp.sync( targetPath );
       open( targetPath );
     } catch (e) {
-      ipcRenderer.sendSync( 'error-message', ' (;´Д`)y─┛~~ \n\n' + e.message );
+      command.sendErrorToMain( e );
     }
   },
 

@@ -33,6 +33,10 @@ module.exports.writeClipboard = function ( text ) {
   clipboard.writeText( text );
 };
 
+module.exports.sendErrorToMain = function ( e ) {
+  ipcRenderer.sendSync( 'error-message', ' (;´Д`)y─┛~~ \n\n' + e.message );
+};
+
 function createSettingJson () {
   const dstJson = {};
   dstJson.templates = _.map( templatesCollection.toJSON(), function ( template ) {
