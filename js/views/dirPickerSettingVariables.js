@@ -69,7 +69,7 @@ var ViewsDirPickerSettingVariables = Backbone.Marionette.CompositeView.extend( {
    * @param elements data-model-idの指定があるエレメントの配列
    */
   updateItemSortIndex: function ( elements ) {
-    console.log( 'updateItemSortIndex' );
+    //console.log( 'updateItemSortIndex' );
     var _self = this;
     _.each( elements, function ( element, index ) {
       //noinspection JSUnresolvedVariable
@@ -82,7 +82,7 @@ var ViewsDirPickerSettingVariables = Backbone.Marionette.CompositeView.extend( {
    */
   badgeUpdate: function () {
     this.ui.badge.text( this.collection.length );
-  },
+  }
 
 } );
 
