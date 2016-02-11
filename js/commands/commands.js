@@ -6,7 +6,6 @@ const path = require( 'path' );
 const fs = require( 'fs' );
 const mkdirp = require( 'mkdirp' );
 
-
 const templatesCollection = require( '../collections/dirPickerTemplates' );//templatesCollection
 const variablesCollection = require( '../collections/dirPickerVariables' );//variablesCollection
 
@@ -46,6 +45,22 @@ module.exports.createDirectory = function ( targetPath ) {
   } catch (e) {
     sendErrorToMain( e );
   }
+};
+
+module.exports.getFolderStats = function ( targetPath ) {
+  const dest = {};
+  try {
+    var stats = fs.statSync( targetPath );
+    dest.isExist = true;
+    dest.isFolder = stats.isDirectory();
+  } catch (e) {
+    if (e.code == 'ENOENT') {
+      dest.isExist = false;
+    }
+  }
+  dest.path = path.normalize( targetPath );
+  dest.isAbs = path.isAbsolute( targetPath );
+  return dest;
 };
 
 function createSettingJson () {
