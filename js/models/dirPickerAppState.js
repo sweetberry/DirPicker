@@ -1,35 +1,32 @@
-var path = require( 'path' );
-var open = require( 'open' );
-var fs = require( 'fs' );
-var mkdirp = require( 'mkdirp' );
-var clipboard = require( 'clipboard' );
-var ipc = require( 'ipc' );
+"use strict";
 
-var _ = require( 'underscore' );
-var jQuery = $ = require( 'jquery' );
-var Backbone = require( 'backbone' );
-Backbone.$ = jQuery;
+const path = require( 'path' );
+const open = require( 'open' );
+const command = require( '../commands/commands.js' );
+
+const _ = require( 'underscore' );
+const Backbone = require( 'backbone' );
 Backbone.LocalStorage = require( "backbone.localstorage" );
-//require( '../vender/backbone.debug' );
+//require( 'backbone-event-logger' );
 
 /**
  *
  * @type {CollectionsDirPickerTemplates}
  */
-var templates = require( '../collections/dirPickerTemplates' );
+const templates = require( '../collections/dirPickerTemplates' );
 
 /**
  *
  * @type {CollectionsDirPickerVariables}
  */
-var variables = require( '../collections/dirPickerVariables' );
+const variables = require( '../collections/dirPickerVariables' );
 
 //noinspection JSUnusedGlobalSymbols
 /**
  * @class
  * @extends {Backbone.Model}
  */
-var ModelsDirPickerAppState = Backbone.Model.extend( {
+const ModelsDirPickerAppState = Backbone.Model.extend( {
   localStorage: new Backbone.LocalStorage( "dirPickerAppState" ),
   defaults    : {
     template: undefined,
@@ -45,7 +42,7 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
 
   initialize: function () {
     //this.debugEvents('ModelsAppState');
-    var _self = this;
+    const _self = this;
     templates.on( 'add remove change', function () {
       _self.trigger( 'change' );
     } );
@@ -56,7 +53,7 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
 
   getTemplate: function () {
     //noinspection JSUnresolvedFunction
-    var dstTemplate = templates.findWhere( {name: this.get( 'template' )} );
+    const dstTemplate = templates.findWhere( {name: this.get( 'template' )} );
     return dstTemplate || templates.at( 0 ) || templates.create( {}, {wait: true} );
   },
 
@@ -78,7 +75,7 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
    * @returns {string[]} パスに含まれる変数名のリスト
    */
   getUsedVariableNamesList: function () {
-    var usedPath = this.getTemplatePath();
+    const usedPath = this.getTemplatePath();
     if (!usedPath) {
       return [];
     } else {
@@ -97,22 +94,19 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
    */
   getEvaluatedPath: function () {
     var templatePath = this.getTemplatePath();
-    var usedVariableNamesList = this.getUsedVariableNamesList();
-    var values = this.get( 'values' );
+    const usedVariableNamesList = this.getUsedVariableNamesList();
+    const values = this.get( 'values' );
     _.each( usedVariableNamesList, function ( varName ) {
       if (values[varName]) {
         templatePath = templatePath.split( '<' + varName + '>' ).join( values[varName] || '' );
       }
     } );
-    var dst = getFolderStats( templatePath );
-    dst.path = path.normalize( templatePath );
-    dst.isAbs = path.isAbsolute( templatePath );
-    return dst;
+    return command.getFolderStats( templatePath );
   },
 
   setValue: function ( name, val ) {
     //console.log( {name: name, val: val} );
-    var values = this.get( 'values' );
+    const values = this.get( 'values' );
     values[name] = val;
     this.set( 'values', values, {silent: true} );
   },
@@ -123,24 +117,18 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
 
   createPath: function () {
     var targetPath = this.getEvaluatedPath().path;
-    try {
-      mkdirp.sync( targetPath );
-      open( targetPath );
-    } catch (e) {
-      ipc.sendSync( 'error-message', ' (;´Д`)y─┛~~ \n\n' + e.message );
-    }
+    command.createDirectory( targetPath );
   },
 
   clipPath: function () {
-    //noinspection JSUnresolvedFunction
-    clipboard.writeText( this.getEvaluatedPath().path );
+    command.writeClipboard( this.getEvaluatedPath().path );
   },
 
   /**
    * @returns {[{name: string, list: undefined|{label:string,val:string}[], value: string|undefined, uid: string}]}
    */
   getUsedVariablesList: function () {
-    var values = this.get( 'values' );
+    const values = this.get( 'values' );
     return _.map( this.getUsedVariableNamesList(), function ( variableName, index ) {
       var temp = _.find( variables.toJSON(), function ( definedVariable ) {
             return definedVariable.name == variableName;
@@ -155,25 +143,6 @@ var ModelsDirPickerAppState = Backbone.Model.extend( {
 
 _.extend( ModelsDirPickerAppState.prototype, require( './mixin' ) );
 
-var appState = module.exports = new ModelsDirPickerAppState( {id: 0} );
+const appState = module.exports = new ModelsDirPickerAppState( {id: 0} );
 appState.fetch();
 appState.save();
-
-/**
- *
- * @param path
- * @returns {object} {isExist:boolean, isFolder:boolean}
- */
-function getFolderStats ( path ) {
-  var dest = {};
-  try {
-    var stats = fs.statSync( path );
-    dest.isExist = true;
-    dest.isFolder = stats.isDirectory();
-  } catch (e) {
-    if (e.code == 'ENOENT') {
-      dest.isExist = false;
-    }
-  }
-  return dest;
-}

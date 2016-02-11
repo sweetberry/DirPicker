@@ -1,11 +1,11 @@
-var _ = require( 'underscore' );
-var jQuery = $ = require( 'jquery' );
-var Backbone = require( 'backbone' );
-Backbone.$ = jQuery;
-Backbone.LocalStorage = require( "backbone.localstorage" );
-//require( '../vender/backbone.debug' );
+"use strict";
 
-var TemplateModel = require( '../models/dirPickerTemplate' );
+const _ = require( 'underscore' );
+const Backbone = require( 'backbone' );
+Backbone.LocalStorage = require( "backbone.localstorage" );
+//require( 'backbone-event-logger' );
+
+const TemplateModel = require( '../models/dirPickerTemplate' );
 
 //noinspection JSUnusedGlobalSymbols
 /**
@@ -14,9 +14,9 @@ var TemplateModel = require( '../models/dirPickerTemplate' );
  */
 var CollectionsDirPickerTemplates = Backbone.Collection.extend( {
   localStorage: new Backbone.LocalStorage( "dirPickerTemplatesCollection" ),
-  model: TemplateModel,
-  comparator: 'sort',
-  initialize: function () {
+  model       : TemplateModel,
+  comparator  : 'sort',
+  initialize  : function () {
     //this.debugEvents('CollectionsTemplates');
   }
 } );

@@ -1,15 +1,15 @@
-var _ = require( 'underscore' );
-var jQuery = $ = require( 'jquery' );
-var Backbone = require( 'backbone' );
-Backbone.$ = jQuery;
-//require( '../vender/backbone.debug' );
+"use strict";
+
+const _ = require( 'underscore' );
+const Backbone = require( 'backbone' );
+//require( 'backbone-event-logger' );
 
 //noinspection JSUnusedGlobalSymbols
 /**
  * @class
  * @extends {Backbone.Model}
  */
-var ModelsDirPickerTemplate = Backbone.Model.extend( {
+const ModelsDirPickerTemplate = Backbone.Model.extend( {
   initialize: function ( attributes ) {
     //this.debugEvents('ModelsTemplate');
     this.set( 'name', this.makeUniqueName( (attributes && attributes.name) || this.defaults.name ) );
