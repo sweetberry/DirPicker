@@ -12,6 +12,7 @@ import packageJson from './package.json'
 
 const $ = gulpLoadPlugins();
 const DESTINATION_DIR_PATH = './dest/';
+const DISTRIBUTION_DIR_PATH = './dist/';
 
 let debug = false;
 
@@ -87,17 +88,17 @@ gulp.task( 'webpack:app.js', function () {
 
 gulp.task( 'electron-build-mac', function () {
   return gulp.src( './dest/**' )
-      .pipe( electron( {
+      .pipe( $.atomElectron( {
         version   : '0.36.7',
         platform  : 'darwin',
         darwinIcon: './src/icons/DirPicker.icns'
       } ) )
-      .pipe( zip.dest( 'dist/' + packageJson.name + '_mac.zip' ) )
+      .pipe( $.vinylZip.dest( DISTRIBUTION_DIR_PATH + packageJson.name + '_mac.zip' ) )
 } );
 
 gulp.task( 'electron-build-win', function () {
   return gulp.src( './dest/**' )
-      .pipe( electron( {
+      .pipe( $.atomElectron( {
         version    : '0.36.7',
         platform   : 'win32',
         arch       : 'ia32',
@@ -105,5 +106,5 @@ gulp.task( 'electron-build-win', function () {
         companyName: 'SweetberryStudio',
         copyright  : '(C) 2015 SweetberryStudio'
       } ) )
-      .pipe( zip.dest( 'dist/' + packageJson.name + '_win32.zip' ) );
+      .pipe( $.vinylZip.dest( DISTRIBUTION_DIR_PATH + packageJson.name + '_win32.zip' ) );
 } );
