@@ -1,15 +1,20 @@
 "use strict";
 
+//noinspection JSUnresolvedVariable,NodeRequireContents
 const ipcRenderer = require( 'electron' ).ipcRenderer;
+//noinspection JSUnresolvedVariable,NodeRequireContents
 const clipboard = require( 'electron' ).clipboard;
 const path = require( 'path' );
 const fs = require( 'fs' );
 const mkdirp = require( 'mkdirp' );
+const _ = require( 'underscore' );
+const templatesCollection = require( '../collections/dirPickerTemplates' );
+const variablesCollection = require( '../collections/dirPickerVariables' );
 
-const templatesCollection = require( '../collections/dirPickerTemplates' );//templatesCollection
-const variablesCollection = require( '../collections/dirPickerVariables' );//variablesCollection
+const SETTING_JSON_ENVELOPE = 'dirPickerSetting';
 
 module.exports.saveSetting = function () {
+  //noinspection JSUnresolvedFunction
   const newPath = ipcRenderer.sendSync( 'get-setting-file-save-path' );
   if (newPath) {
     fs.writeFile( newPath, JSON.stringify( createSettingJson(), null, '  ' ) );
@@ -17,6 +22,7 @@ module.exports.saveSetting = function () {
 };
 
 module.exports.loadSetting = function () {
+  //noinspection JSUnresolvedFunction
   const newPath = ipcRenderer.sendSync( 'get-setting-file-load-path' )[0];
   if (newPath) {
     try {
@@ -25,16 +31,19 @@ module.exports.loadSetting = function () {
         parseSettingJson( JSON.parse( data ) );
       }
     } catch (e) {
+      //noinspection JSUnresolvedFunction
       ipcRenderer.sendSync( 'error-message', 'jsonファイルエラーです。\n' + e.message );
     }
   }
 };
 
 module.exports.writeClipboard = function ( text ) {
+  //noinspection JSUnresolvedFunction
   clipboard.writeText( text );
 };
 
 module.exports.sendErrorToMain = function sendErrorToMain ( e ) {
+  //noinspection JSUnresolvedFunction
   ipcRenderer.sendSync( 'error-message', ' (;´Д`)y─┛~~ \n\n' + e.message );
 };
 
@@ -64,34 +73,35 @@ module.exports.getFolderStats = function ( targetPath ) {
 };
 
 function createSettingJson () {
-  const dstJson = {};
-  dstJson.templates = _.map( templatesCollection.toJSON(), function ( template ) {
+  //noinspection JSUnresolvedFunction
+  const templates = _.map( templatesCollection.toJSON(), function ( template ) {
     return _.pick( template, 'name', 'path' );
   } );
-  dstJson.variables = _.map( variablesCollection.toJSON(), function ( variable ) {
+  //noinspection JSUnresolvedFunction
+  const variables = _.map( variablesCollection.toJSON(), function ( variable ) {
     return _.pick( variable, 'name', 'list' );
   } );
-  return dstJson;
+  const destJson = {};
+  destJson[SETTING_JSON_ENVELOPE] = {template: templates, variables: variables};
+  return destJson;
 }
 
 function parseSettingJson ( json ) {
-  if (json['templates']) {
-    _.each( json['templates'], function ( jsonTemplateRow ) {
-      const existingModel = templatesCollection.findWhere( {name: jsonTemplateRow.name} );
-      if (existingModel) {
-        existingModel.save( jsonTemplateRow, {wait: true} );
-      } else {
-        templatesCollection.create( jsonTemplateRow, {wait: true} );
-      }
-    } );
+  const settingAllJson = json[SETTING_JSON_ENVELOPE];
+  if (settingAllJson) {
+    const templatesJson = settingAllJson['templates'] || [];
+    const variablesJson = settingAllJson['variables'] || [];
+    parseJsonToCollection( templatesJson, templatesCollection );
+    parseJsonToCollection( variablesJson, variablesCollection );
   }
-  if (json['variables']) {
-    _.each( json['variables'], function ( jsonVariableRow ) {
-      const existingModel = variablesCollection.findWhere( {name: jsonVariableRow.name} );
+
+  function parseJsonToCollection ( json, collection ) {
+    _.each( json, function ( row ) {
+      const existingModel = collection.findWhere( {name: row.name} );
       if (existingModel) {
-        existingModel.save( jsonVariableRow, {wait: true} );
+        existingModel.save( row, {wait: true} );
       } else {
-        variablesCollection.create( jsonVariableRow, {wait: true} );
+        collection.create( row, {wait: true} );
       }
     } );
   }
