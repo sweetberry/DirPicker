@@ -5,7 +5,7 @@ var destPath = 'dest';
 module.exports = {
   cache: true,
   entry: {
-    app: './js/app.js'
+    app: './src/js/renderer/app.js'
   },
   target: 'atom',
   resolve: {

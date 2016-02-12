@@ -1,7 +1,7 @@
 "use strict";
 
-const jQuery = $ = require( 'jquery' );
-const Backbone = require( 'backbone' );
+// const jQuery = $ = require( 'jquery' );
+// const Backbone = require( 'backbone' );
 require( 'backbone.marionette' );
 require( 'bootstrap' );
 require( 'bootstrap-3-typeahead' );
