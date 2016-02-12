@@ -12,12 +12,17 @@ var ViewsDirPickerSettingTemplates = Backbone.Marionette.CompositeView.extend( {
   ui                : {
     childViewContainer: '.js-template-table-container',
     addBtn            : '.js-template-add-btn',
-    handle            : '.js-template-handle'
+    handle            : '.js-template-handle',
+    badge             : '.js-template-num-badge'
   },
   events            : {
     'click @ui.addBtn'     : 'onAddClick',
     'mouseenter @ui.handle': 'sortStart',
     'mouseleave @ui.handle': 'sortDestroy'
+  },
+  collectionEvents  : {
+    'add'   : 'badgeUpdate',
+    'remove': 'badgeUpdate'
   },
 
   templateHelpers: function () {
@@ -72,6 +77,13 @@ var ViewsDirPickerSettingTemplates = Backbone.Marionette.CompositeView.extend( {
       _self.collection.get( element.dataset.modelId ).save( 'sort', index );
     } );
     this.collection.sort();
+  },
+
+  /**
+   * バッジの数字だけ更新
+   */
+  badgeUpdate: function () {
+    this.ui.badge.text( this.collection.length );
   }
 
 } );
