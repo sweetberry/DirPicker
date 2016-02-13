@@ -5,8 +5,8 @@ import open from 'open';
 import DirPickerModelBase from './dirPickerModelBase';
 import command from '../common/commands';
 import BackboneLocalStorage from 'backbone.localstorage';
-import templates from  '../collections/dirPickerTemplates';
-import variables from  '../collections/dirPickerVariables';
+import templatesCollection from  '../collections/dirPickerTemplates';
+import variablesCollection from  '../collections/dirPickerVariables';
 
 /**
  * appの状態を保持するモデル
@@ -20,6 +20,9 @@ export class DirPickerAppState extends DirPickerModelBase {
   constructor ( attr, options ) {
     super( attr, options );
     //noinspection JSUnusedGlobalSymbols
+    /**
+     * 永続先はlocalStorage、名前はdirPickerAppState
+     */
     this.localStorage = new BackboneLocalStorage( "dirPickerAppState" );
   }
 
@@ -43,10 +46,10 @@ export class DirPickerAppState extends DirPickerModelBase {
    */
   initialize ( attr, options ) {
     this.debugEvents( 'ModelsAppState' );
-    templates.on( 'add remove change', ()=> {
+    templatesCollection.on( 'add remove change', ()=> {
       this.trigger( 'change' );
     } );
-    variables.on( 'add remove change', ()=> {
+    variablesCollection.on( 'add remove change', ()=> {
       this.trigger( 'change' );
     } );
   }
@@ -58,38 +61,39 @@ export class DirPickerAppState extends DirPickerModelBase {
    * @returns {?string}
    */
   validate ( attr ) {
-    if (attr.template && !templates.findWhere( {name: attr.template} )) {
+    if (attr.template && !templatesCollection.findWhere( {name: attr.template} )) {
       alert( "No template!" );
       return "No template!";
     }
   }
 
   /**
-   *
+   * 現在選択されているTemplateモデルを返します。
    * @returns {DirPickerTemplate}
    */
   getTemplate () {
-    const dstTemplate = templates.findWhere( {name: this.get( 'template' )} );
-    return dstTemplate || templates.at( 0 ) || templates.create( {}, {wait: true} );
+    const dstTemplate = templatesCollection.findWhere( {name: this.get( 'template' )} );
+    return dstTemplate || templatesCollection.at( 0 ) || templatesCollection.create( {}, {wait: true} );
   }
 
   //noinspection JSMethodCanBeStatic
   /**
-   *
-   * @returns {{name:string,path:string}[]}
+   * TemplatesCollectionのtoJSON()を返します。
+   * 要素数０なら新規に一つ作ってから返します。
+   * @returns {{name: string, path: string}[]}
    */
   getTemplates () {
     //noinspection JSUnresolvedFunction
-    let dstTemplates = templates.toJSON();
+    let dstTemplates = templatesCollection.toJSON();
     if (!dstTemplates.length) {
-      templates.create( {}, {wait: true} );
-      dstTemplates = templates.toJSON();
+      templatesCollection.create( {}, {wait: true} );
+      dstTemplates = templatesCollection.toJSON();
     }
     return dstTemplates;
   }
 
   /**
-   *
+   * 現在選択されているTemplateのpathを返します。
    * @returns {string}
    */
   getTemplatePath () {
@@ -97,8 +101,8 @@ export class DirPickerAppState extends DirPickerModelBase {
   }
 
   /**
-   *
-   * @returns {string[]} パスに含まれる変数名のリスト
+   * 現在選択されているTemplateのpathに含まれる変数名のリストを返します。
+   * @returns {string[]}
    */
   getUsedVariableNamesList () {
     const usedPath = this.getTemplatePath();
@@ -115,7 +119,7 @@ export class DirPickerAppState extends DirPickerModelBase {
   }
 
   /**
-   *
+   * 現在選択されているTemplateのpathを評価した結果を返します。
    * @returns {{isExist: boolean, isFolder: boolean, path: string}}
    */
   getEvaluatedPath () {
@@ -131,7 +135,7 @@ export class DirPickerAppState extends DirPickerModelBase {
   }
 
   /**
-   *
+   * 定義された変数に値を入れます。
    * @param {string} name
    * @param {string} val
    */
@@ -143,7 +147,8 @@ export class DirPickerAppState extends DirPickerModelBase {
   }
 
   /**
-   *
+   * 現在選択されているTemplateのpathの場所をosで開きます。
+   * 引数に指定があった場合はその場所を開きます。
    * @param {string} targetPath
    */
   openPath ( targetPath ) {
@@ -151,26 +156,27 @@ export class DirPickerAppState extends DirPickerModelBase {
   }
 
   /**
-   *
+   * 現在選択されているTemplateのpathの場所を作成します。
    */
   createPath () {
     command.createDirectory( this.getEvaluatedPath().path );
   }
 
   /**
-   *
+   * 現在選択されているTemplateのpathをクリップボードに書き込みます。
    */
   clipPath () {
     command.writeClipboard( this.getEvaluatedPath().path );
   }
 
   /**
-   * @returns {[{name: string, list: undefined|{label:string,val:string}[], value: string|undefined, uid: string}]}
+   * 現在選択されているTemplateが使用する変数のリストを返します。
+   * @returns {[{name: string, list: ?{label: string, val:string}[], value: ?string, uid: string}]}
    */
   getUsedVariablesList () {
     const values = this.get( 'values' );
     return _.map( this.getUsedVariableNamesList(), ( variableName, index )=> {
-      const temp = _.find( variables.toJSON(), ( definedVariable )=> {
+      const temp = _.find( variablesCollection.toJSON(), ( definedVariable )=> {
             return definedVariable.name == variableName;
           } ) || {name: variableName};
       temp.value = values[variableName];
