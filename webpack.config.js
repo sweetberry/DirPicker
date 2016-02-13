@@ -1,6 +1,6 @@
-var path = require( 'path' );
+"use strict";
+
 var webpack = require( 'webpack' );
-var destPath = 'dest';
 
 module.exports = {
   cache  : true,
@@ -12,8 +12,6 @@ module.exports = {
     modulesDirectories: ["node_modules"]
   },
   output : {
-    path         : path.join( __dirname, destPath ),
-    publicPath   : destPath,
     filename     : '[name].js',
     chunkFilename: '[chunkhash].js'
   },
