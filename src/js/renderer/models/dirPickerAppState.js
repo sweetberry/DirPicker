@@ -3,7 +3,7 @@
 import _ from 'underscore';
 import open from 'open';
 import {Model} from 'backbone'
-import command from '../commands/commands';
+import command from '../common/commands';
 import 'backbone-event-logger';
 import BackboneLocalStorage from 'backbone.localstorage';
 import templates from  '../collections/dirPickerTemplates';

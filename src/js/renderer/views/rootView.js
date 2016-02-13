@@ -5,7 +5,7 @@ import DirPickerView from './dirPicker';
 import SettingTemplatesView from './dirPickerSettingTemplates';
 import SettingVariablesView from './dirPickerSettingVariables';
 import {suppressPageChangeOnDrop} from '../common/suppressPageChangeOnDrop';
-import command from '../commands/commands';
+import command from '../common/commands';
 
 export default class RootView extends LayoutView.extend( {
   el      : 'body',
