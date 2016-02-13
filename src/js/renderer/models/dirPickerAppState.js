@@ -1,148 +1,154 @@
 "use strict";
 
-const path = require( 'path' );
-const open = require( 'open' );
-const command = require( '../commands/commands.js' );
+import _ from 'underscore';
+import open from 'open';
+import {Model} from 'backbone'
+import command from '../commands/commands';
+import 'backbone-event-logger';
+import BackboneLocalStorage from 'backbone.localstorage';
+import templates from  '../collections/dirPickerTemplates';
+import variables from  '../collections/dirPickerVariables';
 
-const _ = require( 'underscore' );
-const Backbone = require( 'backbone' );
-Backbone.LocalStorage = require( "backbone.localstorage" );
-//require( 'backbone-event-logger' );
+export default class ModelsDirPickerAppState extends Model {
 
-/**
- *
- * @type {CollectionsDirPickerTemplates}
- */
-const templates = require( '../collections/dirPickerTemplates' );
+  /**
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  constructor ( attr, options ) {
+    super( attr, options );
+    this.localStorage = new BackboneLocalStorage( "dirPickerAppState" );
+  }
 
-/**
- *
- * @type {CollectionsDirPickerVariables}
- */
-const variables = require( '../collections/dirPickerVariables' );
+  //noinspection JSMethodCanBeStatic
+  get defaults () {
+    return {
+      template: undefined,
+      values  : {}//{name<string>:, value:<string>}
+    }
+  }
 
-//noinspection JSUnusedGlobalSymbols
-/**
- * @class
- * @extends {Backbone.Model}
- */
-const ModelsDirPickerAppState = Backbone.Model.extend( {
-  localStorage: new Backbone.LocalStorage( "dirPickerAppState" ),
-  defaults    : {
-    template: undefined,
-    values  : {}//{name<string>:, value:<string>}
-  },
+  //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols
+  /**
+   *
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  initialize ( attr, options ) {
+    this.debugEvents( 'ModelsAppState' );
+    templates.on( 'add remove change', ()=> {
+      this.trigger( 'change' );
+    } );
+    variables.on( 'add remove change', ()=> {
+      this.trigger( 'change' );
+    } );
+  }
 
-  validate: function ( attributes ) {
-    if (attributes.template && !templates.findWhere( {name: attributes.template} )) {
+  //noinspection JSMethodCanBeStatic
+  /**
+   *
+   * @param {object} attr
+   * @returns {?string}
+   */
+  validate ( attr ) {
+    if (attr.template && !templates.findWhere( {name: attr.template} )) {
       alert( "No template!" );
       return "No template!";
     }
-  },
+  }
 
-  initialize: function () {
-    //this.debugEvents('ModelsAppState');
-    const _self = this;
-    templates.on( 'add remove change', function () {
-      _self.trigger( 'change' );
-    } );
-    variables.on( 'add remove change', function () {
-      _self.trigger( 'change' );
-    } );
-  },
-
-  getTemplate: function () {
-    //noinspection JSUnresolvedFunction
+  getTemplate () {
     const dstTemplate = templates.findWhere( {name: this.get( 'template' )} );
     return dstTemplate || templates.at( 0 ) || templates.create( {}, {wait: true} );
-  },
+  }
 
-  getTemplates: function () {
+  //noinspection JSMethodCanBeStatic
+  getTemplates () {
     //noinspection JSUnresolvedFunction
-    var dstTemplates = templates.toJSON();
+    let dstTemplates = templates.toJSON();
     if (!dstTemplates.length) {
       templates.create( {}, {wait: true} );
       dstTemplates = templates.toJSON();
     }
     return dstTemplates;
-  },
+  }
 
-  getTemplatePath: function () {
+  getTemplatePath () {
     return this.getTemplate().get( 'path' );
-  },
+  }
 
   /**
+   *
    * @returns {string[]} パスに含まれる変数名のリスト
    */
-  getUsedVariableNamesList: function () {
+  getUsedVariableNamesList () {
     const usedPath = this.getTemplatePath();
     if (!usedPath) {
       return [];
     } else {
-      var tempArray = usedPath.match( /<[^<>]*>/g );
+      let tempArray = usedPath.match( /<[^<>]*>/g );
       tempArray = _.uniq( tempArray );
-      tempArray = _.map( tempArray, function ( string ) {
+      tempArray = _.map( tempArray, ( string )=> {
         return string.replace( /[<>]/g, '' );
       } );
       return tempArray;
     }
-  },
+  }
 
   /**
    *
    * @returns {{isExist: boolean, isFolder: boolean, path: string}}
    */
-  getEvaluatedPath: function () {
-    var templatePath = this.getTemplatePath();
+  getEvaluatedPath () {
+    let templatePath = this.getTemplatePath();
     const usedVariableNamesList = this.getUsedVariableNamesList();
     const values = this.get( 'values' );
-    _.each( usedVariableNamesList, function ( varName ) {
+    _.each( usedVariableNamesList, ( varName )=> {
       if (values[varName]) {
         templatePath = templatePath.split( '<' + varName + '>' ).join( values[varName] || '' );
       }
     } );
     return command.getFolderStats( templatePath );
-  },
+  }
 
-  setValue: function ( name, val ) {
+  setValue ( name, val ) {
     //console.log( {name: name, val: val} );
     const values = this.get( 'values' );
     values[name] = val;
     this.set( 'values', values, {silent: true} );
-  },
+  }
 
-  openPath: function ( targetPath ) {
+  openPath ( targetPath ) {
     open( targetPath || this.getEvaluatedPath().path );
-  },
+  }
 
-  createPath: function () {
-    var targetPath = this.getEvaluatedPath().path;
-    command.createDirectory( targetPath );
-  },
+  createPath () {
+    command.createDirectory( this.getEvaluatedPath().path );
+  }
 
-  clipPath: function () {
+  clipPath () {
     command.writeClipboard( this.getEvaluatedPath().path );
-  },
+  }
 
   /**
    * @returns {[{name: string, list: undefined|{label:string,val:string}[], value: string|undefined, uid: string}]}
    */
-  getUsedVariablesList: function () {
+  getUsedVariablesList () {
     const values = this.get( 'values' );
-    return _.map( this.getUsedVariableNamesList(), function ( variableName, index ) {
-      var temp = _.find( variables.toJSON(), function ( definedVariable ) {
+    return _.map( this.getUsedVariableNamesList(), ( variableName, index )=> {
+      const temp = _.find( variables.toJSON(), ( definedVariable )=> {
             return definedVariable.name == variableName;
           } ) || {name: variableName};
       temp.value = values[variableName];
-      temp.uid = 'variable-' + index;
+      temp.uid = `variable-${index}`;
       return temp;
     } );
   }
 
-} );
+}
 
 _.extend( ModelsDirPickerAppState.prototype, require( './mixin' ) );
-
-const appState = module.exports = new ModelsDirPickerAppState( {id: 0} );
+const appState = new ModelsDirPickerAppState( {id: 0} );
 appState.fetch();
 appState.save();
+export default appState;
