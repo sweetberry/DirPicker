@@ -111,8 +111,8 @@ const ModelsDirPickerAppState = Backbone.Model.extend( {
     this.set( 'values', values, {silent: true} );
   },
 
-  openPath: function () {
-    open( this.getEvaluatedPath().path );
+  openPath: function ( targetPath ) {
+    open( targetPath || this.getEvaluatedPath().path );
   },
 
   createPath: function () {
