@@ -1,44 +1,18 @@
 "use strict";
 
-// const jQuery = $ = require( 'jquery' );
-// const Backbone = require( 'backbone' );
-require( 'backbone.marionette' );
-require( 'bootstrap' );
-require( 'bootstrap-3-typeahead' );
-require( 'html5sortable' );
-require( './commands/setupMenu' );
+import Marionette from 'backbone.marionette';
+import RootView from './views/rootView'
 
-const App = new Backbone.Marionette.Application();
-App.addRegions( {
-  headerRegion   : "#header",
-  mainRegion     : "#main",
-  templatesRegion: "#templatesCollection",
-  variablesRegion: "#variablesCollection",
-  footerRegion   : "#footer",
-  hideRegion     : "#hide"
-} );
-App.on( "start", function () {
+import 'bootstrap';
+import 'bootstrap-3-typeahead';
+import 'html5sortable';
+import './common/setupMenu';
 
-  var dirPicker = new (require( './views/dirPicker' ));
-  App.mainRegion.show( dirPicker );
-  //
-  var templatesPref = new (require( './views/dirPickerSettingTemplates' ));
-  App.templatesRegion.show( templatesPref );
-  //
-  var variablesPref = new (require( './views/dirPickerSettingVariables' ));
-  App.variablesRegion.show( variablesPref );
+const App = new Marionette.Application();
 
-  //import, export ボタン実装。ベタ打ちです。
-  var command = require( './commands/commands.js' );
-  //noinspection JSUnusedLocalSymbols
-  jQuery( ".js-export-btn" ).on( 'click', function ( e ) {
-    command.saveSetting();
-  } );
-  //noinspection JSUnusedLocalSymbols
-  jQuery( ".js-import-btn" ).on( 'click', function ( e ) {
-    command.loadSetting();
-  } );
-
+App.on( "start", ()=> {
+  App.rootView = new RootView();
+  App.rootView.render();
   Backbone.history.start();
 } );
 
