@@ -1,84 +1,85 @@
 "use strict";
 
-//noinspection JSUnresolvedVariable,NodeRequireContents
-const ipcRenderer = require( 'electron' ).ipcRenderer;
-//noinspection JSUnresolvedVariable,NodeRequireContents
-const clipboard = require( 'electron' ).clipboard;
-const path = require( 'path' );
-const fs = require( 'fs' );
-const mkdirp = require( 'mkdirp' );
-const _ = require( 'underscore' );
-const templatesCollection = require( '../collections/dirPickerTemplates' );
-const variablesCollection = require( '../collections/dirPickerVariables' );
+import {ipcRenderer} from 'electron';
+import {clipboard} from 'electron';
+import _ from 'underscore';
+import path from 'path';
+import fs from 'fs';
+import mkdirp from 'mkdirp';
+import templatesCollection from  '../collections/dirPickerTemplates';
+import variablesCollection from  '../collections/dirPickerVariables';
 
 const SETTING_JSON_ENVELOPE = 'dirPickerSetting';
 
-module.exports.saveSetting = function () {
-  //noinspection JSUnresolvedFunction
-  const newPath = ipcRenderer.sendSync( 'get-setting-file-save-path' );
-  if (newPath) {
-    fs.writeFile( newPath, JSON.stringify( createSettingJson(), null, '  ' ) );
+export default class Commands {
+  static saveSetting () {
+    //noinspection JSUnresolvedFunction
+    const newPath = ipcRenderer.sendSync( 'get-setting-file-save-path' );
+    if (newPath) {
+      fs.writeFile( newPath, JSON.stringify( createSettingJson(), null, '  ' ) );
+    }
   }
-};
 
-module.exports.loadSetting = function () {
-  //noinspection JSUnresolvedFunction
-  const newPath = ipcRenderer.sendSync( 'get-setting-file-load-path' )[0];
-  if (newPath) {
-    try {
-      var data = fs.readFileSync( newPath, 'utf8' );
-      if (data) {
-        parseSettingJson( JSON.parse( data ) );
+  static loadSetting () {
+    //noinspection JSUnresolvedFunction
+    const newPath = ipcRenderer.sendSync( 'get-setting-file-load-path' )[0];
+    if (newPath) {
+      try {
+        var data = fs.readFileSync( newPath, 'utf8' );
+        if (data) {
+          parseSettingJson( JSON.parse( data ) );
+        }
+      } catch (e) {
+        //noinspection JSUnresolvedFunction
+        ipcRenderer.sendSync( 'error-message', `jsonファイルエラーです。\n${e.message}` );
       }
+    }
+  }
+
+  static writeClipboard ( text ) {
+    //noinspection JSUnresolvedFunction
+    clipboard.writeText( text );
+  }
+
+  static sendErrorToMain ( e ) {
+    //noinspection JSUnresolvedFunction
+    ipcRenderer.sendSync( 'error-message', ` (;´Д\`)y─┛~~ \n\n${e.message}` );
+  }
+
+  static createDirectory ( targetPath ) {
+    try {
+      mkdirp.sync( targetPath );
+      open( targetPath );
     } catch (e) {
-      //noinspection JSUnresolvedFunction
-      ipcRenderer.sendSync( 'error-message', 'jsonファイルエラーです。\n' + e.message );
+      this.sendErrorToMain( e );
     }
   }
-};
 
-module.exports.writeClipboard = function ( text ) {
-  //noinspection JSUnresolvedFunction
-  clipboard.writeText( text );
-};
-
-module.exports.sendErrorToMain = function sendErrorToMain ( e ) {
-  //noinspection JSUnresolvedFunction
-  ipcRenderer.sendSync( 'error-message', ' (;´Д`)y─┛~~ \n\n' + e.message );
-};
-
-module.exports.createDirectory = function ( targetPath ) {
-  try {
-    mkdirp.sync( targetPath );
-    open( targetPath );
-  } catch (e) {
-    sendErrorToMain( e );
-  }
-};
-
-module.exports.getFolderStats = function ( targetPath ) {
-  const dest = {};
-  try {
-    var stats = fs.statSync( targetPath );
-    dest.isExist = true;
-    dest.isFolder = stats.isDirectory();
-  } catch (e) {
-    if (e.code == 'ENOENT') {
-      dest.isExist = false;
+  static getFolderStats ( targetPath ) {
+    const dest = {};
+    try {
+      var stats = fs.statSync( targetPath );
+      dest.isExist = true;
+      dest.isFolder = stats.isDirectory();
+    } catch (e) {
+      if (e.code == 'ENOENT') {
+        dest.isExist = false;
+      }
     }
+    dest.path = path.normalize( targetPath );
+    dest.isAbs = path.isAbsolute( targetPath );
+    return dest;
   }
-  dest.path = path.normalize( targetPath );
-  dest.isAbs = path.isAbsolute( targetPath );
-  return dest;
-};
 
-function createSettingJson () {
+}
+
+export function createSettingJson () {
   //noinspection JSUnresolvedFunction
-  const templates = _.map( templatesCollection.toJSON(), function ( template ) {
+  const templates = _.map( templatesCollection.toJSON(), ( template )=> {
     return _.pick( template, 'name', 'path' );
   } );
   //noinspection JSUnresolvedFunction
-  const variables = _.map( variablesCollection.toJSON(), function ( variable ) {
+  const variables = _.map( variablesCollection.toJSON(), ( variable )=> {
     return _.pick( variable, 'name', 'list' );
   } );
   const destJson = {};
@@ -86,7 +87,7 @@ function createSettingJson () {
   return destJson;
 }
 
-function parseSettingJson ( json ) {
+export function parseSettingJson ( json ) {
   const settingAllJson = json[SETTING_JSON_ENVELOPE];
   if (settingAllJson) {
     const templatesJson = settingAllJson['templates'] || [];
@@ -96,7 +97,7 @@ function parseSettingJson ( json ) {
   }
 
   function parseJsonToCollection ( json, collection ) {
-    _.each( json, function ( row ) {
+    _.each( json, ( row )=> {
       const existingModel = collection.findWhere( {name: row.name} );
       if (existingModel) {
         existingModel.save( row, {wait: true} );
@@ -106,3 +107,4 @@ function parseSettingJson ( json ) {
     } );
   }
 }
+
