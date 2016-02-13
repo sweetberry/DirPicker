@@ -18,12 +18,12 @@ export default class DirPickerTemplate extends DirPickerModelBase {
   //noinspection JSMethodCanBeStatic
   /**
    *
-   * @returns {{name: string, path: string}}
+   * @returns {{name: '名称未設定テンプレート', path: '/path/to/your/favorite/thing'}}
    */
   get defaults () {
     return {
       "name": '名称未設定テンプレート',
-      "path": "/path/to/your/favorite/thing"
+      "path": '/path/to/your/favorite/thing'
     }
   }
 
