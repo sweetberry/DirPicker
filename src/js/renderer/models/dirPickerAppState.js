@@ -9,7 +9,7 @@ import BackboneLocalStorage from 'backbone.localstorage';
 import templates from  '../collections/dirPickerTemplates';
 import variables from  '../collections/dirPickerVariables';
 
-export default class ModelsDirPickerAppState extends Model {
+export class DirPickerAppState extends Model {
 
   /**
    * @param {object} [attr]
@@ -147,8 +147,8 @@ export default class ModelsDirPickerAppState extends Model {
 
 }
 
-_.extend( ModelsDirPickerAppState.prototype, require( './mixin' ) );
-const appState = new ModelsDirPickerAppState( {id: 0} );
-appState.fetch();
-appState.save();
-export default appState;
+_.extend( DirPickerAppState.prototype, require( './mixin' ) );
+const dirPickerAppState = new DirPickerAppState( {id: 0} );
+dirPickerAppState.fetch();
+dirPickerAppState.save();
+export default dirPickerAppState;
