@@ -1,27 +1,50 @@
 "use strict";
 
-const _ = require( 'underscore' );
-const Backbone = require( 'backbone' );
-//require( 'backbone-event-logger' );
+import DirPickerModelBase from './dirPickerModelBase';
 
-//noinspection JSUnusedGlobalSymbols
 /**
- * @class
- * @extends {Backbone.Model}
+ * Templateを表すモデル。
  */
-const ModelsDirPickerTemplate = Backbone.Model.extend( {
-  initialize: function ( attributes ) {
-    //this.debugEvents('ModelsTemplate');
-    this.set( 'name', this.makeUniqueName( (attributes && attributes.name) || this.defaults.name ) );
-  },
-  defaults  : {
-    "name": '名称未設定テンプレート',
-    "path": "/path/to/your/favorite/thing"
-  },
-  validate  : function ( attrs ) {
+export default class DirPickerTemplate extends DirPickerModelBase {
+
+  /**
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  constructor ( attr, options ) {
+    super( attr, options );
+  }
+
+  //noinspection JSMethodCanBeStatic
+  /**
+   *
+   * @returns {{name: string, path: string}}
+   */
+  get defaults () {
+    return {
+      "name": '名称未設定テンプレート',
+      "path": "/path/to/your/favorite/thing"
+    }
+  }
+
+  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
+  /**
+   *
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  initialize ( attr, options ) {
+    this.debugEvents( 'ModelsTemplate' );
+    this.set( 'name', this.makeUniqueName( (attr && attr.name) || this.defaults.name ) );
+  }
+
+  //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
+  /**
+   *
+   * @param {object} attrs
+   * @returns {boolean}
+   */
+  validate ( attrs ) {
     return !attrs.path || !attrs.name
   }
-} );
-_.extend( ModelsDirPickerTemplate.prototype, require( './mixin' ) );
-
-module.exports = ModelsDirPickerTemplate;
+}
