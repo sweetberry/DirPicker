@@ -27,7 +27,7 @@ export default class DirPickerTemplate extends DirPickerModelBase {
     }
   }
 
-  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
+  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
   /**
    *
    * @param {object} [attr]
