@@ -2,14 +2,16 @@
 
 import _ from 'underscore';
 import open from 'open';
-import {Model} from 'backbone'
+import DirPickerModelBase from './dirPickerModelBase';
 import command from '../common/commands';
-import 'backbone-event-logger';
 import BackboneLocalStorage from 'backbone.localstorage';
 import templates from  '../collections/dirPickerTemplates';
 import variables from  '../collections/dirPickerVariables';
 
-export class DirPickerAppState extends Model {
+/**
+ * appの状態を保持するモデル
+ */
+export class DirPickerAppState extends DirPickerModelBase {
 
   /**
    * @param {object} [attr]
@@ -17,18 +19,23 @@ export class DirPickerAppState extends Model {
    */
   constructor ( attr, options ) {
     super( attr, options );
+    //noinspection JSUnusedGlobalSymbols
     this.localStorage = new BackboneLocalStorage( "dirPickerAppState" );
   }
 
-  //noinspection JSMethodCanBeStatic
+  //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
+  /**
+   *
+   * @returns {{template: string, values: {name:string, value:string}}}
+   */
   get defaults () {
     return {
       template: undefined,
-      values  : {}//{name<string>:, value:<string>}
+      values  : {}
     }
   }
 
-  //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols
+  //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedGlobalSymbols
   /**
    *
    * @param {object} [attr]
@@ -44,7 +51,7 @@ export class DirPickerAppState extends Model {
     } );
   }
 
-  //noinspection JSMethodCanBeStatic
+  //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
   /**
    *
    * @param {object} attr
@@ -57,12 +64,20 @@ export class DirPickerAppState extends Model {
     }
   }
 
+  /**
+   *
+   * @returns {DirPickerTemplate}
+   */
   getTemplate () {
     const dstTemplate = templates.findWhere( {name: this.get( 'template' )} );
     return dstTemplate || templates.at( 0 ) || templates.create( {}, {wait: true} );
   }
 
   //noinspection JSMethodCanBeStatic
+  /**
+   *
+   * @returns {{name:string,path:string}[]}
+   */
   getTemplates () {
     //noinspection JSUnresolvedFunction
     let dstTemplates = templates.toJSON();
@@ -73,6 +88,10 @@ export class DirPickerAppState extends Model {
     return dstTemplates;
   }
 
+  /**
+   *
+   * @returns {string}
+   */
   getTemplatePath () {
     return this.getTemplate().get( 'path' );
   }
@@ -111,6 +130,11 @@ export class DirPickerAppState extends Model {
     return command.getFolderStats( templatePath );
   }
 
+  /**
+   *
+   * @param {string} name
+   * @param {string} val
+   */
   setValue ( name, val ) {
     //console.log( {name: name, val: val} );
     const values = this.get( 'values' );
@@ -118,14 +142,24 @@ export class DirPickerAppState extends Model {
     this.set( 'values', values, {silent: true} );
   }
 
+  /**
+   *
+   * @param {string} targetPath
+   */
   openPath ( targetPath ) {
     open( targetPath || this.getEvaluatedPath().path );
   }
 
+  /**
+   *
+   */
   createPath () {
     command.createDirectory( this.getEvaluatedPath().path );
   }
 
+  /**
+   *
+   */
   clipPath () {
     command.writeClipboard( this.getEvaluatedPath().path );
   }
@@ -147,7 +181,6 @@ export class DirPickerAppState extends Model {
 
 }
 
-_.extend( DirPickerAppState.prototype, require( './mixin' ) );
 const dirPickerAppState = new DirPickerAppState( {id: 0} );
 dirPickerAppState.fetch();
 dirPickerAppState.save();
