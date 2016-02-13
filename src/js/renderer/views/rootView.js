@@ -4,7 +4,7 @@ import {LayoutView} from 'backbone.marionette';
 import DirPickerView from './dirPicker';
 import SettingTemplatesView from './dirPickerSettingTemplates';
 import SettingVariablesView from './dirPickerSettingVariables';
-import {suppressPageChangeOnDrop} from '../common/suppressPageChangeOnDrop'
+import {suppressPageChangeOnDrop} from '../common/suppressPageChangeOnDrop';
 import command from '../commands/commands';
 
 export default class RootView extends LayoutView.extend( {
