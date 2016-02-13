@@ -3,13 +3,13 @@
 import DIR_PICKER_TEMPLATE from '../templates/dirPicker.html';
 import _ from 'underscore';
 import path from 'path';
-import dirPickerAppStateModel from '../models/dirPickerAppState';
+import dirPickerAppState from '../models/dirPickerAppState';
 import {LayoutView} from 'backbone.marionette';
 
 export default class DirPickerView extends LayoutView.extend( {
   className  : "js-view-dir-picker",
   template   : DIR_PICKER_TEMPLATE,
-  model      : dirPickerAppStateModel,
+  model      : dirPickerAppState,
   modelEvents: {
     'change': 'render'
   },
