@@ -1,23 +1,39 @@
 "use strict";
 
-const _ = require( 'underscore' );
-const Backbone = require( 'backbone' );
-//require( 'backbone-event-logger' );
+import DirPickerModelBase from './dirPickerModelBase';
 
-//noinspection JSUnusedGlobalSymbols
 /**
- * @class
- * @extends {Backbone.Model}
+ * リスト型変数の各項目を表すモデル
  */
-const ModelsDirPickerVariableRow = Backbone.Model.extend( {
-  defaults  : {
-    "label": '',
-    "val"  : ''
-  },
-  initialize: function ( attributes ) {
-    //this.debugEvents('ModelsVariableRow');
-  }
-} );
-_.extend( ModelsDirPickerVariableRow.prototype, require( './mixin' ) );
+export default class DirPickerVariableRow extends DirPickerModelBase {
 
-module.exports = ModelsDirPickerVariableRow;
+  /**
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  constructor ( attr, options ) {
+    super( attr, options );
+  }
+
+  //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
+  /**
+   *
+   * @returns {{label: '', val: ''}}
+   */
+  get defaults () {
+    return {
+      "label": '',
+      "val"  : ''
+    }
+  }
+
+  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
+  /**
+   *
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  initialize ( attr, options ) {
+    this.debugEvents( 'ModelsVariableRow' );
+  }
+}
