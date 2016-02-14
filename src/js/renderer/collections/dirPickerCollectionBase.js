@@ -15,12 +15,6 @@ export default class DirPickerCollectionBase extends Collection {
    */
   constructor ( attr, options ) {
     super( attr, options );
-
-    /**
-     * ここに文字列が入るとeventLoggerが有効になります。
-     * @type {string}
-     */
-    this.debugEvents = undefined;
   }
 
   /**
