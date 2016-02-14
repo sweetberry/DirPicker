@@ -13,7 +13,7 @@ export default class DirPickerVariableList extends DirPickerCollectionBase {
     super( attr, options );
 
     //eventsLoggerを有効化
-    this.debugEvents( 'CollectionsVariableList' );
+    // this.debugEvents( 'CollectionsVariableList' );
 
     /**
      *

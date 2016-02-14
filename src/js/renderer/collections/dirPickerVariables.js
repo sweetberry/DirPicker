@@ -17,7 +17,7 @@ export class DirPickerVariables extends DirPickerCollectionBase {
     super( attr, options );
 
     //eventsLoggerを有効化
-    this.debugEvents( 'CollectionsVariables' );
+    // this.debugEvents( 'CollectionsVariables' );
 
     //noinspection JSUnusedGlobalSymbols
     /**

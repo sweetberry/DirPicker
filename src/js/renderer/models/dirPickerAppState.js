@@ -21,7 +21,7 @@ export class DirPickerAppState extends DirPickerModelBase {
     super( attr, options );
 
     //eventsLoggerを有効化
-    this.debugEvents( 'ModelsAppState' );
+    // this.debugEvents( 'ModelsAppState' );
 
     //noinspection JSUnusedGlobalSymbols
     /**

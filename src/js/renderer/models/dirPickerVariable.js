@@ -17,7 +17,7 @@ export default class DirPickerVariable extends DirPickerModelBase {
     super( attr, options );
 
     //eventsLoggerを有効化
-    this.debugEvents( 'ModelsVariable' );
+    // this.debugEvents( 'ModelsVariable' );
 
     this.set( 'name', this.makeUniqueName( (attr && attr.name) || this.defaults.name ) );
     this.set( 'list', (attr && attr.list) || this.defaults.list );

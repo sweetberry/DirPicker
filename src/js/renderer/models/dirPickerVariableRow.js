@@ -15,7 +15,7 @@ export default class DirPickerVariableRow extends DirPickerModelBase {
     super( attr, options );
 
     //eventsLoggerを有効化
-    this.debugEvents( 'ModelsVariableRow' );
+    // this.debugEvents( 'ModelsVariableRow' );
   }
 
   //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
