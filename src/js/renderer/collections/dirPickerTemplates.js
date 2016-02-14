@@ -7,7 +7,7 @@ import DirPickerTemplate from '../models/dirPickerTemplate';
 /**
  * Templateを束ねるコレクション
  */
-export default class DirPickerTemplates extends DirPickerCollectionBase {
+export class DirPickerTemplates extends DirPickerCollectionBase {
 
   /**
    * @param {object} [attr]
