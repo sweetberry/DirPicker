@@ -1,55 +1,81 @@
-var templateHtml = require( '../templates/dirPickerSettingVariableRow.html' );
+"use strict";
 
-//noinspection JSUnusedGlobalSymbols
-var ViewsDirPickerSettingVariableRow = Backbone.Marionette.ItemView.extend( {
-  model: undefined,//variableRowModel
-  template: templateHtml,
-  tagName: 'li',
-  className: 'list-group-item js-variable-row',
-  ui: {
+import DIR_PICKER_SETTING_VARIABLE_ROW_TEMPLATE from '../templates/dirPickerSettingVariableRow.html';
+import {ItemView} from 'backbone.marionette';
+
+/**
+ * setting画面のvariable内のリスト項目を扱うviewです。
+ */
+export default class DirPickerSettingVariableRowView extends ItemView.extend( {
+  model      : undefined,//variableRowModel
+  template   : DIR_PICKER_SETTING_VARIABLE_ROW_TEMPLATE,
+  tagName    : 'li',
+  className  : 'list-group-item js-variable-row',
+  ui         : {
     labelInput: '.js-variable-row-label-input',
-    valInput: '.js-variable-row-val-input',
-    delBtn: '.js-variable-row-del-btn',
-    handle: '.js-variable-row-handle'
+    valInput  : '.js-variable-row-val-input',
+    delBtn    : '.js-variable-row-del-btn',
+    handle    : '.js-variable-row-handle'
   },
-  events: {
-    'change @ui.labelInput': 'changeLabelInput',
-    'change @ui.valInput': 'changeValInput',
-    'click @ui.delBtn': 'onClickDelBtn'
+  events     : {
+    'change @ui.labelInput': 'onChangeLabelInput',
+    'change @ui.valInput'  : 'onChangeValInput',
+    'click @ui.delBtn'     : 'onClickDelBtn'
   },
   modelEvents: {
     'change': 'render'
-  },
-  initialize: function () {
-  },
-  templateHelpers: function () {
-    var _self = this;
-    //noinspection JSUnusedGlobalSymbols
+  }
+} ) {
+  //noinspection JSUnusedGlobalSymbols,JSUnusedGlobalSymbols
+  /**
+   *
+   * @returns {{getID: getID}}
+   */
+  templateHelpers () {
     return {
-      getID: function () {
-        return _self.model.cid;
+      getID: ()=> {
+        return this.model.cid;
       }
     };
-  },
-  onRender: function () {
+  }
+
+  //noinspection JSUnusedGlobalSymbols,JSUnusedGlobalSymbols
+  /**
+   *
+   */
+  onRender () {
     this.$el.css( {
       'padding': '5px 0px'
     } );
     this.ui.handle.tooltip();
-  },
-  onBeforeDestroy: function () {
-    this.ui.handle.tooltip( 'destroy' );
-  },
-  onClickDelBtn: function () {
-    this.model.destroy();
-  },
-  changeLabelInput: function () {
-    this.model.set( 'label', this.ui.labelInput.val(), {silent: false} );
-  },
-  changeValInput: function () {
-    this.model.set( 'val', this.ui.valInput.val(), {silent: false} );
   }
 
-} );
+  //noinspection JSUnusedGlobalSymbols,JSUnusedGlobalSymbols
+  /**
+   *
+   */
+  onBeforeDestroy () {
+    this.ui.handle.tooltip( 'destroy' );
+  }
 
-module.exports = ViewsDirPickerSettingVariableRow;
+  /**
+   *
+   */
+  onClickDelBtn () {
+    this.model.destroy();
+  }
+
+  /**
+   *
+   */
+  onChangeLabelInput () {
+    this.model.set( 'label', this.ui.labelInput.val(), {silent: false} );
+  }
+
+  /**
+   *
+   */
+  onChangeValInput () {
+    this.model.set( 'val', this.ui.valInput.val(), {silent: false} );
+  }
+}
