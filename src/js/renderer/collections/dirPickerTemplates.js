@@ -1,26 +1,55 @@
 "use strict";
 
-const _ = require( 'underscore' );
-const Backbone = require( 'backbone' );
-Backbone.LocalStorage = require( "backbone.localstorage" );
-//require( 'backbone-event-logger' );
+import DirPickerCollectionBase from './dirPickerCollectionBase';
+import BackboneLocalStorage from 'backbone.localstorage';
+import DirPickerTemplate from '../models/dirPickerTemplate';
 
-const TemplateModel = require( '../models/dirPickerTemplate' );
-
-//noinspection JSUnusedGlobalSymbols
 /**
- * @class
- * @extends {Backbone.Collection}
+ * Templateを束ねるコレクション
  */
-var CollectionsDirPickerTemplates = Backbone.Collection.extend( {
-  localStorage: new Backbone.LocalStorage( "dirPickerTemplatesCollection" ),
-  model       : TemplateModel,
-  comparator  : 'sort',
-  initialize  : function () {
-    //this.debugEvents('CollectionsTemplates');
-  }
-} );
-_.extend( CollectionsDirPickerTemplates.prototype, require( './mixin' ) );
+export default class DirPickerTemplates extends DirPickerCollectionBase {
 
-var templates = module.exports = new CollectionsDirPickerTemplates();
-templates.fetch();
+  /**
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  constructor ( attr, options ) {
+    super( attr, options );
+
+    //noinspection JSUnusedGlobalSymbols
+    /**
+     * 永続先はlocalStorage、名前はdirPickerTemplatesCollection
+     */
+    this.localStorage = new BackboneLocalStorage( "dirPickerTemplatesCollection" );
+
+    /**
+     *
+     * @type {DirPickerTemplate}
+     */
+    this.model = DirPickerTemplate;
+
+    //noinspection JSUnusedGlobalSymbols
+    /**
+     *
+     * @type {string}
+     */
+    this.comparator = 'sort'
+
+  }
+
+  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
+  /**
+   *
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  initialize ( attr, options ) {
+    this.debugEvents( 'CollectionsTemplates' );
+  }
+
+}
+
+const dirPickerTemplatesCollection = new DirPickerTemplates();
+dirPickerTemplatesCollection.fetch();
+export default dirPickerTemplatesCollection;
+
