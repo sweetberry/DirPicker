@@ -1,12 +1,15 @@
-var templateHtml = require( '../templates/dirPickerSettingVariables.html' );
-var DirPickerSettingVariableView = require( './dirPickerSettingVariable' );
-var DirPickerVariablesCollection = require( '../collections/dirPickerVariables' );
+"use strict";
 
-//noinspection JSUnusedGlobalSymbols
-var ViewsDirPickerSettingVariables = Backbone.Marionette.CompositeView.extend( {
-  collection        : DirPickerVariablesCollection,
+import _ from 'underscore';
+import DIR_PICKER_SETTING_VARIABLE_TEMPLATE from '../templates/dirPickerSettingVariables.html';
+import DirPickerSettingVariableView from './dirPickerSettingVariable'
+import variablesCollection from '../collections/dirPickerVariables';
+import {CompositeView} from 'backbone.marionette';
+
+export default class DirPickerSettingVariablesView extends CompositeView.extend( {
+  collection        : variablesCollection,
   childView         : DirPickerSettingVariableView,
-  template          : templateHtml,
+  template          : DIR_PICKER_SETTING_VARIABLE_TEMPLATE,
   className         : "",
   childViewContainer: '.js-variable-list-container',
   reorderOnSort     : true,
@@ -24,66 +27,72 @@ var ViewsDirPickerSettingVariables = Backbone.Marionette.CompositeView.extend( {
   collectionEvents  : {
     'add'   : 'badgeUpdate',
     'remove': 'badgeUpdate'
-  },
-  templateHelpers   : function () {
-    var _self = this;
-    //noinspection JSUnusedGlobalSymbols
+  }
+} ) {
+  //noinspection JSUnusedGlobalSymbols
+  /**
+   *
+   * @returns {{getVariablesCount: getVariablesCount}}
+   */
+  templateHelpers () {
     return {
-      getVariablesCount: function () {
-        return _self.collection.length;
+      getVariablesCount: ()=> {
+        return this.collection.length;
       }
     }
-  },
+  }
 
-  sortStart      : function () {
-    var _self = this;
+  //noinspection JSUnusedGlobalSymbols
+  /**
+   *
+   */
+  onBeforeDestroy () {
+    this.sortDestroy();
+  }
+
+  /**
+   * 変数追加
+   */
+  onClickAddBtn () {
+    this.collection.create( {}, {wait: true} );
+  }
+
+  /**
+   * 並び替え機能を有効にします。
+   */
+  sortStart () {
     this.ui.childViewContainer.sortable( {
       forcePlaceholderSize: true,
       //placeholderClass: 'col-lg-4 col-md-6',
       handle              : '.js-variable-handle'
-    } ).bind( 'sortupdate', function () {
-      //console.log("variablesSort");
-      _self.updateItemSortIndex( _self.ui.childViewContainer.find( '.js-variable-model-id' ) );
+    } ).bind( 'sortupdate', ()=> {
+      this.updateItemSortIndex( this.ui.childViewContainer.find( '.js-variable-model-id' ) );
     } );
-  },
-  sortDestroy    : function () {
+  }
+
+  /**
+   * 並び替え機能を無効にします。
+   */
+  sortDestroy () {
     if (this.ui.childViewContainer.sortable) {
       this.ui.childViewContainer.sortable( 'destroy' );
     }
-  },
-  initialize     : function () {
-    //this.debugEvents('VariablesView');
-  },
-  onRender       : function () {
-    //console.log( 'variablesRender' );
-  },
-  onBeforeDestroy: function () {
-    this.sortDestroy();
-  },
-  onClickAddBtn  : function () {
-    this.collection.create( {}, {wait: true} );
-  },
+  }
 
   /**
-   *
-   * @param elements data-model-idの指定があるエレメントの配列
+   * 並び替えの結果をデータに反映します。
+   * @param {node[]} elements data-model-idの指定があるエレメントの配列
    */
-  updateItemSortIndex: function ( elements ) {
-    //console.log( 'updateItemSortIndex' );
-    var _self = this;
-    _.each( elements, function ( element, index ) {
-      //noinspection JSUnresolvedVariable
-      _self.collection.get( element.dataset.modelId ).save( 'sort', index );
+  updateItemSortIndex ( elements ) {
+    _.each( elements, ( element, index )=> {
+      this.collection.get( element.dataset.modelId ).save( 'sort', index );
     } );
-  },
+  }
 
   /**
    * バッジの数字だけ更新
    */
-  badgeUpdate: function () {
+  badgeUpdate () {
     this.ui.badge.text( this.collection.length );
   }
-
-} );
-
-module.exports = ViewsDirPickerSettingVariables;
+}
