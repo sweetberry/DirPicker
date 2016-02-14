@@ -40,7 +40,7 @@ gulp.task( 'debug', function () {
 gulp.task( 'build-osx', function () {
   runSequence(
       'clean:dest',
-      ['_copy-package.json', '_copy-otherFiles', 'webpack:app.js'],
+      ['copy:package.json', 'copy:otherFiles', 'webpack:app.js'],
       'electron-build-mac',
       'clean:dest'
   );
@@ -49,7 +49,7 @@ gulp.task( 'build-osx', function () {
 gulp.task( 'build-win', function () {
   runSequence(
       'clean:dest',
-      ['_copy-package.json', '_copy-otherFiles', 'webpack:app.js'],
+      ['copy:package.json', 'copy:otherFiles', 'webpack:app.js'],
       'electron-build-win',
       'clean:dest'
   );
