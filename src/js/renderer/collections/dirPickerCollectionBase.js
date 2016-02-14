@@ -1,7 +1,7 @@
 "use strict";
 
+import _ from 'underscore';
 import {Collection} from 'backbone';
-const _ = require( 'underscore' );
 import 'backbone-event-logger';
 
 /**
