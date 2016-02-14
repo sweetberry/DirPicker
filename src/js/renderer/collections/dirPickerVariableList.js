@@ -12,6 +12,9 @@ export default class DirPickerVariableList extends DirPickerCollectionBase {
   constructor ( attr, options ) {
     super( attr, options );
 
+    //eventsLoggerを有効化
+    this.debugEvents( 'CollectionsVariableList' );
+
     /**
      *
      * @type {VariableRowModel}
@@ -25,16 +28,6 @@ export default class DirPickerVariableList extends DirPickerCollectionBase {
      */
     this.comparator = 'sort'
 
-  }
-
-  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
-  /**
-   *
-   * @param {object} [attr]
-   * @param {object} [options]
-   */
-  initialize ( attr, options ) {
-    this.debugEvents( 'CollectionsVariableList' );
   }
 
 }
