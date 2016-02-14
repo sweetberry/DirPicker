@@ -13,6 +13,11 @@ export default class DirPickerTemplate extends DirPickerModelBase {
    */
   constructor ( attr, options ) {
     super( attr, options );
+
+    //eventsLoggerを有効化
+    this.debugEvents( 'ModelsTemplate' );
+
+    this.set( 'name', this.makeUniqueName( (attr && attr.name) || this.defaults.name ) );
   }
 
   //noinspection JSMethodCanBeStatic
@@ -25,17 +30,6 @@ export default class DirPickerTemplate extends DirPickerModelBase {
       "name": '名称未設定テンプレート',
       "path": '/path/to/your/favorite/thing'
     }
-  }
-
-  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
-  /**
-   *
-   * @param {object} [attr]
-   * @param {object} [options]
-   */
-  initialize ( attr, options ) {
-    this.debugEvents( 'ModelsTemplate' );
-    this.set( 'name', this.makeUniqueName( (attr && attr.name) || this.defaults.name ) );
   }
 
   //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols

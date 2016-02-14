@@ -13,6 +13,9 @@ export default class DirPickerVariableRow extends DirPickerModelBase {
    */
   constructor ( attr, options ) {
     super( attr, options );
+
+    //eventsLoggerを有効化
+    this.debugEvents( 'ModelsVariableRow' );
   }
 
   //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
@@ -27,13 +30,4 @@ export default class DirPickerVariableRow extends DirPickerModelBase {
     }
   }
 
-  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols
-  /**
-   *
-   * @param {object} [attr]
-   * @param {object} [options]
-   */
-  initialize ( attr, options ) {
-    this.debugEvents( 'ModelsVariableRow' );
-  }
 }
