@@ -16,6 +16,9 @@ export class DirPickerTemplates extends DirPickerCollectionBase {
   constructor ( attr, options ) {
     super( attr, options );
 
+    //eventsLoggerを有効化
+    this.debugEvents( 'CollectionsTemplates' );
+
     //noinspection JSUnusedGlobalSymbols
     /**
      * 永続先はlocalStorage、名前はdirPickerTemplatesCollection
@@ -35,16 +38,6 @@ export class DirPickerTemplates extends DirPickerCollectionBase {
      */
     this.comparator = 'sort'
 
-  }
-
-  //noinspection JSUnusedGlobalSymbols,JSUnusedLocalSymbols,JSUnusedLocalSymbols
-  /**
-   *
-   * @param {object} [attr]
-   * @param {object} [options]
-   */
-  initialize ( attr, options ) {
-    this.debugEvents( 'CollectionsTemplates' );
   }
 
 }
