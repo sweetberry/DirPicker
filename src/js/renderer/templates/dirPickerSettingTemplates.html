@@ -1,0 +1,28 @@
+<script type="text/x-handlebars-template">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="btn btn-primary pull-right js-template-add-btn"><i class="fa fa-plus-circle"></i> add</span>
+            <h4 style="margin-top:0;margin-bottom:0;">Templates
+            <span class="btn btn-primary" data-toggle="collapse" data-target="#templates_table">
+                <i class="fa fa-list"></i>
+                <span class="badge js-template-num-badge"><%= getTemplatesCount() %></span>
+            </span>
+            </h4>
+        </div>
+        <div id="templates_table" class="panel-body collapse in">
+            <table class="row table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th style="width:10px;"></th>
+                    <th>Name</th>
+                    <th>Path</th>
+                    <th style="width:10px;"></th>
+                </tr>
+                </thead>
+                <tbody class="js-template-table-container">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</script>
