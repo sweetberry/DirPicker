@@ -19,11 +19,22 @@ export class DirPickerAppState extends DirPickerModelBase {
    */
   constructor ( attr, options ) {
     super( attr, options );
+
+    //eventsLoggerを有効化
+    this.debugEvents( 'ModelsAppState' );
+
     //noinspection JSUnusedGlobalSymbols
     /**
      * 永続先はlocalStorage、名前はdirPickerAppState
      */
     this.localStorage = new BackboneLocalStorage( "dirPickerAppState" );
+
+    templatesCollection.on( 'add remove change', ()=> {
+      this.trigger( 'change' );
+    } );
+    variablesCollection.on( 'add remove change', ()=> {
+      this.trigger( 'change' );
+    } );
   }
 
   //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
@@ -36,22 +47,6 @@ export class DirPickerAppState extends DirPickerModelBase {
       template: undefined,
       values  : {}
     }
-  }
-
-  //noinspection JSUnusedLocalSymbols,JSUnusedLocalSymbols,JSUnusedGlobalSymbols
-  /**
-   *
-   * @param {object} [attr]
-   * @param {object} [options]
-   */
-  initialize ( attr, options ) {
-    this.debugEvents( 'ModelsAppState' );
-    templatesCollection.on( 'add remove change', ()=> {
-      this.trigger( 'change' );
-    } );
-    variablesCollection.on( 'add remove change', ()=> {
-      this.trigger( 'change' );
-    } );
   }
 
   //noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
