@@ -14,6 +14,12 @@ export default class DirPickerModelBase extends Model {
    */
   constructor ( attr, options ) {
     super( attr, options );
+
+    /**
+     * ここに文字列が入るとeventLoggerが有効になります。
+     * @type {string}
+     */
+    this.debugEvents = undefined;
   }
 
   /**
