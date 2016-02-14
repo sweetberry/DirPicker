@@ -1,26 +1,45 @@
 "use strict";
 
-const _ = require( 'underscore' );
-const Backbone = require( 'backbone' );
-Backbone.LocalStorage = require( "backbone.localstorage" );
-//require( 'backbone-event-logger' );
+import DirPickerCollectionBase from './dirPickerCollectionBase';
+import BackboneLocalStorage from 'backbone.localstorage';
+import VariableModel from '../models/dirPickerVariable'
 
-const VariableModel = require( '../models/dirPickerVariable' );
-
-//noinspection JSUnusedGlobalSymbols
 /**
- * @class
- * @extends {Backbone.Collection}
+ * Variableを束ねるコレクション
  */
-const CollectionsDirPickerVariables = Backbone.Collection.extend( {
-  localStorage: new Backbone.LocalStorage( "dirPickerVariablesCollection" ),
-  model: VariableModel,
-  comparator: 'sort',
-  initialize: function () {
-    //this.debugEvents('CollectionsVariables');
-  }
-} );
-_.extend( CollectionsDirPickerVariables.prototype, require( './mixin' ) );
+export class DirPickerVariables extends DirPickerCollectionBase {
 
-const variables = module.exports = new CollectionsDirPickerVariables();
-variables.fetch();
+  /**
+   * @param {object} [attr]
+   * @param {object} [options]
+   */
+  constructor ( attr, options ) {
+    super( attr, options );
+
+    //eventsLoggerを有効化
+    this.debugEvents( 'CollectionsVariables' );
+
+    //noinspection JSUnusedGlobalSymbols
+    /**
+     * 永続先はlocalStorage、名前はdirPickerTemplatesCollection
+     */
+    this.localStorage = new BackboneLocalStorage( "dirPickerVariablesCollection" );
+
+    /**
+     *
+     * @type {DirPickerVariable}
+     */
+    this.model = VariableModel;
+
+    //noinspection JSUnusedGlobalSymbols
+    /**
+     *
+     * @type {string}
+     */
+    this.comparator = 'sort';
+  }
+}
+
+const dirPickerVariablesCollection = new DirPickerVariables();
+dirPickerVariablesCollection.fetch();
+export default dirPickerVariablesCollection;
