@@ -144,7 +144,7 @@ export class DirPickerAppState extends DirPickerModelBase {
   /**
    * 現在選択されているTemplateのpathの場所をosで開きます。
    * 引数に指定があった場合はその場所を開きます。
-   * @param {string} targetPath
+   * @param {string} [targetPath]
    */
   openPath ( targetPath ) {
     open( targetPath || this.getEvaluatedPath().path );
