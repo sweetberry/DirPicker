@@ -1,11 +1,18 @@
-var templateHtml = require( '../templates/dirPickerSettingTemplates.html' );
-var ChildView = require( './dirPickerSettingTemplateRow' );
+"use strict";
 
-//noinspection JSUnusedGlobalSymbols
-var ViewsDirPickerSettingTemplates = Backbone.Marionette.CompositeView.extend( {
-  collection        : require( '../collections/dirPickerTemplates' ),//templatesCollection
+import _ from 'underscore';
+import DIR_PICKER_SETTING_TEMPLATES_TEMPLATE from '../templates/dirPickerSettingTemplates.html';
+import ChildView from './dirPickerSettingTemplateRow'
+import templatesCollection from '../collections/dirPickerTemplates'
+import {CompositeView} from 'backbone.marionette';
+
+/**
+ * setting画面のtemplateリストを扱うviewです。
+ */
+export default class DirPickerSettingTemplatesView extends CompositeView.extend( {
+  collection        : templatesCollection,
   childView         : ChildView,
-  template          : templateHtml,
+  template          : DIR_PICKER_SETTING_TEMPLATES_TEMPLATE,
   className         : "",
   childViewContainer: '.js-template-table-container',
   reorderOnSort     : true,
@@ -23,69 +30,81 @@ var ViewsDirPickerSettingTemplates = Backbone.Marionette.CompositeView.extend( {
   collectionEvents  : {
     'add'   : 'badgeUpdate',
     'remove': 'badgeUpdate'
-  },
+  }
+} ) {
 
-  templateHelpers: function () {
-    var _self = this;
+  //noinspection JSUnusedGlobalSymbols
+  /**
+   *
+   * @returns {{getTemplatesCount: getTemplatesCount}}
+   */
+  templateHelpers () {
     //noinspection JSUnusedGlobalSymbols
     return {
-      getTemplatesCount: function () {
-        return _self.collection.length;
+      getTemplatesCount: ()=> {
+        return this.collection.length;
       }
     }
-  },
+  }
 
-  sortStart  : function () {
-    var _self = this;
+  /**
+   * 並び替え機能を有効にします。
+   */
+  sortStart () {
     this.ui.childViewContainer.sortable( {
       forcePlaceholderSize: true,
       items               : 'tr',
       handle              : '.js-template-handle'
-    } ).bind( 'sortupdate', function () {
-      _self.updateItemSortIndex( _self.ui.childViewContainer.find( '.js-template-model-id' ) );
-    } ).bind( 'sortstart', function ( e, ui ) {
+    } ).bind( 'sortupdate', ()=> {
+      this.updateItemSortIndex( this.ui.childViewContainer.find( '.js-template-model-id' ) );
+    } ).bind( 'sortstart', ( e, ui )=> {
       ui.item.css( 'display', 'block' )
-    } ).bind( 'sortstop', function ( e, ui ) {
+    } ).bind( 'sortstop', ( e, ui )=> {
       ui.item.css( 'display', '' )
     } );
-  },
-  sortDestroy: function () {
+  }
+
+  /**
+   * 並び替え機能を無効にします。
+   */
+  sortDestroy () {
     if (this.ui.childViewContainer.sortable) {
       this.ui.childViewContainer.sortable( 'destroy' );
     }
-  },
+  }
 
-  onRender       : function () {
-
-  },
-  onBeforeDestroy: function () {
-    this.sortDestroy();
-  },
-  onAddClick     : function () {
-    this.collection.create( {}, {wait: true} );
-    this.onRender();
-  },
-
+  //noinspection JSUnusedGlobalSymbols
   /**
    *
-   * @param elements data-model-idの指定があるエレメントの配列
    */
-  updateItemSortIndex: function ( elements ) {
-    var _self = this;
-    _.each( elements, function ( element, index ) {
+  onBeforeDestroy () {
+    this.sortDestroy();
+  }
+
+  /**
+   * templateを追加
+   */
+  onAddClick () {
+    this.collection.create( {}, {wait: true} );
+  }
+
+  /**
+   * 並び替えの結果をデータに反映します。
+   * @param {node[]} elements data-model-idの指定があるエレメントの配列
+   */
+  updateItemSortIndex ( elements ) {
+    _.each( elements, ( element, index )=> {
       //noinspection JSUnresolvedVariable
-      _self.collection.get( element.dataset.modelId ).save( 'sort', index );
+      this.collection.get( element.dataset.modelId ).save( 'sort', index );
     } );
     this.collection.sort();
-  },
+  }
 
   /**
    * バッジの数字だけ更新
    */
-  badgeUpdate: function () {
+  badgeUpdate () {
     this.ui.badge.text( this.collection.length );
   }
 
-} );
-
-module.exports = ViewsDirPickerSettingTemplates;
+}
