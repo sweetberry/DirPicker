@@ -1,7 +1,7 @@
 "use strict";
 
 import {Model} from 'backbone';
-import 'backbone-event-logger';
+// import 'backbone-event-logger';
 
 /**
  * Modelの雛形。mixinがうまく書けなかったのでbaseClassを定義しています。

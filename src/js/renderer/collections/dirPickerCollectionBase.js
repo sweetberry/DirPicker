@@ -2,7 +2,7 @@
 
 import _ from 'underscore';
 import {Collection} from 'backbone';
-import 'backbone-event-logger';
+// import 'backbone-event-logger';
 
 /**
  * Collectionの雛形。mixinがうまく書けなかったのでbaseClassを定義しています。
