@@ -34,6 +34,7 @@ export default class DirPickerView extends LayoutView.extend( {
   }
 } ) {
 
+  //noinspection JSUnusedGlobalSymbols
   templateHelpers () {
     //noinspection JSUnusedGlobalSymbols
     return {
@@ -63,6 +64,7 @@ export default class DirPickerView extends LayoutView.extend( {
 
   }
 
+  //noinspection JSUnusedGlobalSymbols
   onRender () {
     this.model.save();
 
@@ -84,6 +86,7 @@ export default class DirPickerView extends LayoutView.extend( {
       if ($el.typeahead) {$el.typeahead( 'destroy' )}
       //js-variable-select
       const targetListRow = _.find( this.model.getUsedVariablesList(), {uid: $el.attr( "id" )} );
+      //noinspection JSUnusedGlobalSymbols,JSUnusedGlobalSymbols
       $el.typeahead( {
         source         : targetListRow.list,
         items          : 'all',
@@ -126,20 +129,13 @@ export default class DirPickerView extends LayoutView.extend( {
     }
 
     const targetVal = element.value;
-    //console.log( "targetVal:", targetVal );
     const LAST_PADDING_REGEXP = /\d+$/;
     const lastPadding = LAST_PADDING_REGEXP.exec( targetVal );
-    //console.log( "lastPadding:", lastPadding );
     if (lastPadding) {
-
-      //TODO:ここで桁数が変わってしまっています!
-      const dstPadding = parseInt( lastPadding ) + difference;
-      //console.log( "dst:", targetVal.replace( lastPaddingRegexp, dstPadding ) );
-      if (dstPadding >= 0) {
-        element.dataset.variableValue = targetVal.replace( LAST_PADDING_REGEXP, dstPadding );
-        this.setValues();
-        $( element ).val( targetVal.replace( LAST_PADDING_REGEXP, dstPadding ) );
-      }
+      const dstPadding = this.countUpPadding( lastPadding[0], difference );
+      element.dataset.variableValue = targetVal.replace( LAST_PADDING_REGEXP, dstPadding );
+      this.setValues();
+      $( element ).val( targetVal.replace( LAST_PADDING_REGEXP, dstPadding ) );
     }
   }
 
@@ -167,5 +163,21 @@ export default class DirPickerView extends LayoutView.extend( {
       //noinspection JSUnresolvedVariable
       this.model.setValue( element.dataset.variableName, element.dataset.variableValue );
     } );
+  }
+
+  //noinspection JSMethodCanBeStatic
+  /**
+   * パディングをインクリメントして、桁数を揃えた文字列を返します。
+   * マイナス値になるときは0を返します。
+   * 桁があふれたときは上位の桁が切り捨てられます。
+   * @param {string} srcPaddingString
+   * @param {number} [increment]
+   * @returns {string} 桁数を揃えた結果を返します
+   */
+  countUpPadding ( srcPaddingString, increment = 1 ) {
+    const digits = srcPaddingString.length;
+    const padNumber = parseInt( srcPaddingString );
+    const dstNumber = (padNumber + increment >= 0) ? padNumber + increment : 0;
+    return ('0'.repeat( digits ) + dstNumber).slice( -digits );
   }
 }
