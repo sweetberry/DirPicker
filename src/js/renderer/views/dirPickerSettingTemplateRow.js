@@ -1,15 +1,15 @@
-var templateHtml = require( '../templates/dirPickerSettingTemplateRow.html' );
-var dirPickerVariablesCollection = require( '../collections/dirPickerVariables' );
+"use strict";
 
-//noinspection JSUnusedGlobalSymbols
-var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
-  /**
-   * @type {ModelsDirPickerTemplate}
-   */
-  model          : undefined,
-  template       : templateHtml,
-  tagName        : 'tr',
-  ui             : {
+import _ from 'underscore';
+import DIR_PICKER_SETTING_TEMPLATE_ROW_TEMPLATE from '../templates/dirPickerSettingTemplateRow.html';
+import variablesCollection from  '../collections/dirPickerVariables';
+import {LayoutView} from 'backbone.marionette';
+
+export default class DirPickerSettingTemplateRowView extends LayoutView.extend( {
+  model      : undefined,
+  template   : DIR_PICKER_SETTING_TEMPLATE_ROW_TEMPLATE,
+  tagName    : 'tr',
+  ui         : {
     name     : '.js-template-name',
     nameInput: '.js-template-name-input',
     path     : '.js-template-path',
@@ -17,7 +17,7 @@ var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
     delBtn   : '.js-template-del-btn',
     handle   : '.js-template-handle'
   },
-  events         : {
+  events     : {
     'click @ui.name'        : 'onClickName',
     'keyup @ui.nameInput'   : 'onKeyupNameInput',
     'focusout @ui.nameInput': 'changeNameInput',
@@ -26,74 +26,78 @@ var ViewsDirPickerSettingTemplateRow = Backbone.Marionette.LayoutView.extend( {
     'focusout @ui.pathInput': 'changePathInput',
     'click @ui.delBtn'      : 'onClickDelBtn'
   },
-  modelEvents    : {
+  modelEvents: {
     'change': 'render'
-  },
-  templateHelpers: function () {
-    var _self = this;
-    var escapedTagRegexp = /(&lt;.*?&gt;)/g;
+  }
+} ) {
+
+  //noinspection JSUnusedGlobalSymbols
+  templateHelpers () {
+    const ESCAPED_TAG_REGEXP = /(&lt;.*?&gt;)/g;
     //noinspection JSUnusedGlobalSymbols
     return {
-      getColoredTemplatePath: function () {
-
-        if (dirPickerVariablesCollection) {//設定済み変数がある場合
-          var definedVariableNames = dirPickerVariablesCollection.pluck( 'name' );
-          return _.escape( _self.model.get( 'path' ) ).replace( escapedTagRegexp, function ( match ) {
-            if (_.find( definedVariableNames, function ( definedVarName ) {
-                  return '&lt;' + definedVarName + '&gt;' == match;
+      getColoredTemplatePath: ()=> {
+        if (variablesCollection) {//設定済み変数がある場合
+          const definedVariableNames = variablesCollection.pluck( 'name' );
+          return _.escape( this.model.get( 'path' ) ).replace( ESCAPED_TAG_REGEXP, ( match )=> {
+            if (_.find( definedVariableNames, ( definedVarName )=> {
+                  return `&lt;${definedVarName}&gt;` == match;
                 } )) {
-              return "<span class='text-success'>" + match + "</span>"
+              return `<span class='text-success'>${match}</span>`;
             } else {
-              return "<span class='text-warning'>" + match + "</span>"
+              return `<span class='text-warning'>${match}</span>`;
             }
           } );
         }
         //設定済み変数がない場合
-        return _.escape( _self.model.get( 'path' ) ).replace( escapedTagRegexp, "<span class='text-warning'>$1</span>" );
+        return _.escape( this.model.get( 'path' ) ).replace( ESCAPED_TAG_REGEXP, "<span class='text-warning'>$1</span>" );
       }
     }
-  },
+  }
 
-  onRender        : function () {
+  //noinspection JSUnusedGlobalSymbols
+  onRender () {
     this.ui.handle.tooltip( 'destroy' );
     this.ui.handle.tooltip();
-  },
-  onBeforeDestroy : function () {
+  }
+
+  //noinspection JSUnusedGlobalSymbols
+  onBeforeDestroy () {
     this.ui.handle.tooltip( 'destroy' );
-  },
-  onKeyupNameInput: function ( e ) {
-    if (e.which == 13) {
-      this.changeNameInput();
-    }
-  },
-  onKeyupPathInput: function ( e ) {
-    if (e.which == 13) {
-      this.changePathInput();
-    }
-  },
-  onClickName     : function () {
+  }
+
+  onKeyupNameInput ( e ) {
+    if (e.which == 13) {this.changeNameInput();}
+  }
+
+  onKeyupPathInput () {
+    if (e.which == 13) {this.changePathInput();}
+  }
+
+  onClickName () {
     this.ui.name.addClass( 'hide' );
     this.ui.nameInput.removeClass( 'hide' );
     this.ui.nameInput.focus();
-    //this.ui.delBtn.addClass( 'hide' );
-  },
-  onClickPath     : function () {
+  }
+
+  onClickPath () {
     this.ui.path.addClass( 'hide' );
     this.ui.pathInput.removeClass( 'hide' );
     this.ui.pathInput.focus();
-  },
-  onClickDelBtn   : function () {
+  }
+
+  onClickDelBtn () {
     this.model.destroy();
-  },
-  changeNameInput : function () {
+  }
+
+  changeNameInput () {
     this.model.save( 'name', this.ui.nameInput.val(), {silent: false, wait: true} );
     this.render();
-  },
-  changePathInput : function () {
+  }
+
+  changePathInput () {
     this.model.save( 'path', this.ui.pathInput.val(), {silent: false, wait: true} );
     this.render();
   }
 
-} );
-
-module.exports = ViewsDirPickerSettingTemplateRow;
+}
