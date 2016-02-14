@@ -24,13 +24,14 @@ export default class DirPickerView extends LayoutView.extend( {
     pathSeg       : '.js-result-path-seg'
   },
   events     : {
-    'change @ui.selectTemplate': 'onChangeTemplate',
-    'change @ui.variableInput' : 'onChangeVariable',
-    'keyup @ui.variableInput'  : 'onKeyUpVariable',
-    'click @ui.openBtn'        : 'onClickOpen',
-    'click @ui.createBtn'      : 'onClickCreate',
-    'click @ui.clipBtn'        : 'onClickClip',
-    'dblclick @ui.pathSeg'     : 'onClickPathSeg'
+    'change @ui.selectTemplate' : 'onChangeTemplate',
+    'change @ui.variableInput'  : 'onChangeVariable',
+    'keyup @ui.variableInput'   : 'onKeyUpVariable',
+    'focusout @ui.variableInput': 'render',
+    'click @ui.openBtn'         : 'onClickOpen',
+    'click @ui.createBtn'       : 'onClickCreate',
+    'click @ui.clipBtn'         : 'onClickClip',
+    'dblclick @ui.pathSeg'      : 'onClickPathSeg'
   }
 } ) {
 
@@ -136,6 +137,7 @@ export default class DirPickerView extends LayoutView.extend( {
       element.dataset.variableValue = targetVal.replace( LAST_PADDING_REGEXP, dstPadding );
       this.setValues();
       $( element ).val( targetVal.replace( LAST_PADDING_REGEXP, dstPadding ) );
+      //TODO: カウントアップ時にリアルタイムで結果の更新がしたい。結果DIVの描画を別で持って呼び出すか？
     }
   }
 
