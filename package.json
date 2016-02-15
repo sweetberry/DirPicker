@@ -8,9 +8,9 @@
   "license": "MIT",
   "main": "js/main.js",
   "scripts": {
-    "test": "mocha --compilers js:espower-babel/guess test/**/*.test.js",
     "esdoc": "esdoc -c esdoc.json",
-    "debug": "gulp --color --gulpfile gulpfile.babel.js debug"
+    "debug": "gulp --color --gulpfile gulpfile.babel.js debug",
+    "build": "gulp --color --gulpfile gulpfile.babel.js build"
   },
   "dependencies": {
     "backbone": "^1.2.3",

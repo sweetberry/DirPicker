@@ -12,13 +12,8 @@ Support the daily folder operation.
 ## How to build
 
 ```
-npm install
-gulp build-osx
-```
-
-```
-npm install
-gulp build-win
+$ npm install
+$ npm run build
 ```
 
 ## Contributing
