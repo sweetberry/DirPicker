@@ -58,12 +58,12 @@
                 </div>
             </fieldset>
         </form>
-        <div class="alert alert-dismissible <% if(getEvaluatedPath().isExist){print('alert-success')}else{print('alert-warning')} %>"
+        <div class="js-result-panel alert alert-dismissible <% if(getEvaluatedPath().isExist){print('alert-success')}else{print('alert-warning')} %>"
              style="margin-top:2em;">
             <h4>
-                <i class="fa <% if ( getEvaluatedPath().isExist && !getEvaluatedPath().isFolder ){ print( 'fa-file' ) } else { print( 'fa-folder-open' ) } %>"
+                <i class="js-result-icon fa <% if ( getEvaluatedPath().isExist && !getEvaluatedPath().isFolder ){ print( 'fa-file' ) } else { print( 'fa-folder-open' ) } %>"
                    style="margin-right:0.5em;"></i>Result Path</h4>
-            <p class=" js-result-panel" style="word-break:break-all;-webkit-user-select:text;">
+            <p class="js-result-path" style="word-break:break-all;-webkit-user-select:text;">
                 <%= (getSubDirLinkedPath()) %>
             </p>
         </div>

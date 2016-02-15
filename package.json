@@ -1,6 +1,6 @@
 {
   "name": "DirPicker",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/sweetberry/DirPicker.git"
@@ -8,9 +8,9 @@
   "license": "MIT",
   "main": "js/main.js",
   "scripts": {
-    "test": "mocha --compilers js:espower-babel/guess test/**/*.test.js",
     "esdoc": "esdoc -c esdoc.json",
-    "debug": "gulp --color --gulpfile gulpfile.babel.js debug"
+    "debug": "gulp --color --gulpfile gulpfile.babel.js debug",
+    "build": "gulp --color --gulpfile gulpfile.babel.js build"
   },
   "dependencies": {
     "backbone": "^1.2.3",

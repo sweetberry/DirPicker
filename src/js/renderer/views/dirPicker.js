@@ -16,6 +16,8 @@ export default class DirPickerView extends LayoutView.extend( {
   ui         : {
     selectTemplate: '#selectTemplate',
     resultPanel   : '.js-result-panel',
+    resultIcon    : '.js-result-icon',
+    resultPath    : '.js-result-path',
     variableInput : '.js-variable-input',
     variableSelect: '.js-variable-select',
     openBtn       : '.js-open-btn',
@@ -50,16 +52,7 @@ export default class DirPickerView extends LayoutView.extend( {
       },
       getSubDirLinkedPath : ()=> {
         const pathString = this.model.getEvaluatedPath().path;
-        const sepPathArray = pathString.split( path.sep );
-        const resPathArray = [];
-        while (sepPathArray.length) {
-          resPathArray.unshift( sepPathArray.join( path.sep ) );
-          sepPathArray.pop();
-        }
-        return _.map( _.zip( pathString.split( path.sep ), resPathArray ), ( raw )=> {
-          return `<span class="js-result-path-seg" data-path="${raw[1]}">${_.escape( raw[0] )}</span>`;
-        } ).join( path.sep );
-
+        return this.makeSubDirLinkedPath( pathString );
       }
     }
 
@@ -137,7 +130,7 @@ export default class DirPickerView extends LayoutView.extend( {
       element.dataset.variableValue = targetVal.replace( LAST_PADDING_REGEXP, dstPadding );
       this.setValues();
       $( element ).val( targetVal.replace( LAST_PADDING_REGEXP, dstPadding ) );
-      //TODO: カウントアップ時にリアルタイムで結果の更新がしたい。結果DIVの描画を別で持って呼び出すか？
+      this.redrawResultPanel();
     }
   }
 
@@ -182,4 +175,34 @@ export default class DirPickerView extends LayoutView.extend( {
     const dstNumber = (padNumber + increment >= 0) ? padNumber + increment : 0;
     return ('0'.repeat( digits ) + dstNumber).slice( -digits );
   }
+
+  /**
+   * 各セパレータ頃にリンク用のデータを入れ込んだspanでラップします。
+   * @param {string} pathString
+   * @returns {string}
+   */
+  makeSubDirLinkedPath ( pathString ) {
+    const sepPathArray = pathString.split( path.sep );
+    const resPathArray = [];
+    while (sepPathArray.length) {
+      resPathArray.unshift( sepPathArray.join( path.sep ) );
+      sepPathArray.pop();
+    }
+    return _.map( _.zip( pathString.split( path.sep ), resPathArray ), ( raw )=> {
+      return `<span class="js-result-path-seg" data-path="${raw[1]}">${_.escape( raw[0] )}</span>`;
+    } ).join( path.sep );
+  }
+
+  /**
+   * resultPanelだけ再描画。
+   */
+  redrawResultPanel () {
+    const report = this.model.getEvaluatedPath();
+    const newColor = (report.isExist) ? 'alert-success' : 'alert-warning';
+    const newIcon = (report.isExist && !report.isFolder) ? 'fa-file' : 'fa-folder-open';
+    this.ui.resultPanel.removeClass( 'alert-success alert-warning' ).addClass( newColor );
+    this.ui.resultIcon.removeClass( 'fa-file fa-folder-open' ).addClass( newIcon );
+    this.ui.resultPath.html( this.makeSubDirLinkedPath( report.path ) );
+  }
+
 }

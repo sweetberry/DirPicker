@@ -37,20 +37,12 @@ gulp.task( 'debug', function () {
   );
 } );
 
-gulp.task( 'build-osx', function () {
+gulp.task( 'build', function () {
+  const buildTaskName = (process.platform.toString().match( 'win32' )) ? 'electron-build-win' : 'electron-build-mac';
   runSequence(
       'clean:dest',
       ['copy:package.json', 'copy:otherFiles', 'webpack:app.js', 'compile:main'],
-      'electron-build-mac',
-      'clean:dest'
-  );
-} );
-
-gulp.task( 'build-win', function () {
-  runSequence(
-      'clean:dest',
-      ['copy:package.json', 'copy:otherFiles', 'webpack:app.js', 'compile:main'],
-      'electron-build-win',
+      buildTaskName,
       'clean:dest'
   );
 } );
