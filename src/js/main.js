@@ -1,7 +1,9 @@
 "use strict";
 
-import path from 'path';
-import electron from 'electron';
+// import path from 'path';
+// import electron from 'electron';
+const electron = require( 'electron' );
+const path = require( 'path' );
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const dialog = electron.dialog;
@@ -49,7 +51,7 @@ app.on( 'ready', ()=> {
   } );
 
   // and load the index.html of the app.
-  mainWindow.loadUrl( 'file://' + __dirname + '/../html/renderer/index.html' );
+  mainWindow.loadURL( `file://${__dirname}/../html/renderer/index.html` );
 
   // Emitted when the window is closed.
   mainWindow.on( 'closed', ()=> {

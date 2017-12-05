@@ -1,11 +1,12 @@
 "use strict";
 
-import _ from 'underscore';
-import DIR_PICKER_SETTING_TEMPLATE_ROW_TEMPLATE from '../templates/dirPickerSettingTemplateRow.html';
-import variablesCollection from  '../collections/dirPickerVariables';
-import {LayoutView} from 'backbone.marionette';
+import _ from 'underscore'
+import DIR_PICKER_SETTING_TEMPLATE_ROW_TEMPLATE from '../templates/dirPickerSettingTemplateRow.html'
+import variablesCollection from '../collections/dirPickerVariables'
+// noinspection JSUnresolvedVariable
+import {ItemView} from 'backbone.marionette'
 
-export default class DirPickerSettingTemplateRowView extends LayoutView.extend( {
+export default class DirPickerSettingTemplateRowView extends ItemView.extend( {
   model      : undefined,
   template   : DIR_PICKER_SETTING_TEMPLATE_ROW_TEMPLATE,
   tagName    : 'tr',
@@ -36,16 +37,16 @@ export default class DirPickerSettingTemplateRowView extends LayoutView.extend( 
    *
    * @returns {{getColoredTemplatePath: getColoredTemplatePath}}
    */
-  templateHelpers () {
+  get templateHelpers () {
     const ESCAPED_TAG_REGEXP = /(&lt;.*?&gt;)/g;
-    //noinspection JSUnusedGlobalSymbols
+    //noinspection JSUnusedGlobalSymbols,JSValidateTypes
     return {
-      getColoredTemplatePath: ()=> {
+      getColoredTemplatePath: () => {
         if (variablesCollection) {//設定済み変数がある場合
           const definedVariableNames = variablesCollection.pluck( 'name' );
-          return _.escape( this.model.get( 'path' ) ).replace( ESCAPED_TAG_REGEXP, ( match )=> {
-            if (_.find( definedVariableNames, ( definedVarName )=> {
-                  return `&lt;${definedVarName}&gt;` == match;
+          return _.escape( this.model.get( 'path' ) ).replace( ESCAPED_TAG_REGEXP, ( match ) => {
+            if (_.find( definedVariableNames, ( definedVarName ) => {
+                  return `&lt;${definedVarName}&gt;` === match;
                 } )) {
               return `<span class='text-success'>${match}</span>`;
             } else {
@@ -81,14 +82,16 @@ export default class DirPickerSettingTemplateRowView extends LayoutView.extend( 
    * @param {event} e
    */
   onKeyupNameInput ( e ) {
-    if (e.which == 13) {this.changeNameInput();}
+    // noinspection JSUnresolvedVariable
+    if (e.which === 13) {this.changeNameInput();}
   }
 
   /**
    * enterの入力を監視します
    */
-  onKeyupPathInput () {
-    if (e.which == 13) {this.changePathInput();}
+  onKeyupPathInput (e) {
+    // noinspection ES6ModulesDependencies
+    if (e.which === 13) {this.changePathInput();}
   }
 
   /**

@@ -1,12 +1,13 @@
 "use strict";
 
-import _ from 'underscore';
-import open from 'open';
-import DirPickerModelBase from './dirPickerModelBase';
-import command from '../common/commands';
-import BackboneLocalStorage from 'backbone.localstorage';
-import templatesCollection from  '../collections/dirPickerTemplates';
-import variablesCollection from  '../collections/dirPickerVariables';
+import _ from 'underscore'
+import open from 'open'
+import DirPickerModelBase from './dirPickerModelBase'
+import command from '../common/commands'
+// noinspection JSUnresolvedVariable
+import {LocalStorage} from 'backbone.localstorage'
+import templatesCollection from '../collections/dirPickerTemplates'
+import variablesCollection from '../collections/dirPickerVariables'
 
 /**
  * appの状態を保持するモデル
@@ -27,12 +28,12 @@ export class DirPickerAppState extends DirPickerModelBase {
     /**
      * 永続先はlocalStorage、名前はdirPickerAppState
      */
-    this.localStorage = new BackboneLocalStorage( "dirPickerAppState" );
+    this.localStorage = new LocalStorage( "dirPickerAppState" );
 
-    templatesCollection.on( 'add remove change', ()=> {
+    templatesCollection.on( 'add remove change', () => {
       this.trigger( 'change' );
     } );
-    variablesCollection.on( 'add remove change', ()=> {
+    variablesCollection.on( 'add remove change', () => {
       this.trigger( 'change' );
     } );
   }
@@ -43,6 +44,7 @@ export class DirPickerAppState extends DirPickerModelBase {
    * @returns {{template: string, values: {name:string, value:string}}}
    */
   get defaults () {
+    // noinspection JSValidateTypes
     return {
       template: undefined,
       values  : {}
@@ -106,7 +108,7 @@ export class DirPickerAppState extends DirPickerModelBase {
     } else {
       let tempArray = usedPath.match( /<[^<>]*>/g );
       tempArray = _.uniq( tempArray );
-      tempArray = _.map( tempArray, ( string )=> {
+      tempArray = _.map( tempArray, ( string ) => {
         return string.replace( /[<>]/g, '' );
       } );
       return tempArray;
@@ -121,7 +123,7 @@ export class DirPickerAppState extends DirPickerModelBase {
     let templatePath = this.getTemplatePath();
     const usedVariableNamesList = this.getUsedVariableNamesList();
     const values = this.get( 'values' );
-    _.each( usedVariableNamesList, ( varName )=> {
+    _.each( usedVariableNamesList, ( varName ) => {
       if (values[varName]) {
         templatePath = templatePath.split( '<' + varName + '>' ).join( values[varName] || '' );
       }
@@ -170,10 +172,10 @@ export class DirPickerAppState extends DirPickerModelBase {
    */
   getUsedVariablesList () {
     const values = this.get( 'values' );
-    return _.map( this.getUsedVariableNamesList(), ( variableName, index )=> {
-      const temp = _.find( variablesCollection.toJSON(), ( definedVariable )=> {
-            return definedVariable.name == variableName;
-          } ) || {name: variableName};
+    return _.map( this.getUsedVariableNamesList(), ( variableName, index ) => {
+      const temp = _.find( variablesCollection.toJSON(), ( definedVariable ) => {
+        return definedVariable.name === variableName;
+      } ) || {name: variableName};
       temp.value = values[variableName];
       temp.uid = `variable-${index}`;
       return temp;
