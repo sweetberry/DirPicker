@@ -1,11 +1,11 @@
 "use strict";
 
-import DirPickerModelBase from './dirPickerModelBase';
+import BaseModel from './baseModel';
 
 /**
  * Templateを表すモデル。
  */
-export default class DirPickerTemplate extends DirPickerModelBase {
+export default class TemplateModel extends BaseModel {
 
   /**
    * @param {object} [attr]
@@ -17,6 +17,7 @@ export default class DirPickerTemplate extends DirPickerModelBase {
     //eventsLoggerを有効化
     // this.debugEvents( 'ModelsTemplate' );
 
+    // noinspection JSCheckFunctionSignatures
     this.set( 'name', this.makeUniqueName( (attr && attr.name) || this.defaults.name ) );
   }
 

@@ -1,13 +1,13 @@
 "use strict";
 
 import _ from 'underscore';
-import DirPickerModelBase from './dirPickerModelBase';
-import VariableListCollection from '../collections/dirPickerVariableList';
+import BaseModel from './baseModel';
+import VariableListCollection from '../collections/variableListCollection';
 
 /**
  * 定義済み変数を表すモデル
  */
-export default class DirPickerVariable extends DirPickerModelBase {
+export default class VariableModel extends BaseModel {
 
   /**
    * @param {object} [attr]
@@ -19,11 +19,12 @@ export default class DirPickerVariable extends DirPickerModelBase {
     //eventsLoggerを有効化
     // this.debugEvents( 'ModelsVariable' );
 
+    // noinspection JSCheckFunctionSignatures
     this.set( 'name', this.makeUniqueName( (attr && attr.name) || this.defaults.name ) );
     this.set( 'list', (attr && attr.list) || this.defaults.list );
 
     /**
-     * @type {DirPickerVariableList}
+     * @type {VariableListCollection}
      */
     this.listCollection = new VariableListCollection( this.get( 'list' ) );
     this.listCollection.on( 'change', ()=> {

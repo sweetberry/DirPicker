@@ -2,17 +2,17 @@
 
 import _ from 'underscore'
 import open from 'open'
-import DirPickerModelBase from './dirPickerModelBase'
+import BaseModel from './baseModel'
 import command from '../common/commands'
 // noinspection JSUnresolvedVariable
 import {LocalStorage} from 'backbone.localstorage'
-import templatesCollection from '../collections/dirPickerTemplates'
-import variablesCollection from '../collections/dirPickerVariables'
+import templatesCollection from '../collections/templatesCollection'
+import variablesCollection from '../collections/variablesCollection'
 
 /**
  * appの状態を保持するモデル
  */
-export class DirPickerAppState extends DirPickerModelBase {
+export class AppStateModel extends BaseModel {
 
   /**
    * @param {object} [attr]
@@ -66,7 +66,7 @@ export class DirPickerAppState extends DirPickerModelBase {
 
   /**
    * 現在選択されているTemplateモデルを返します。
-   * @returns {DirPickerTemplate}
+   * @returns {TemplateModel}
    */
   getTemplate () {
     const dstTemplate = templatesCollection.findWhere( {name: this.get( 'template' )} );
@@ -184,7 +184,7 @@ export class DirPickerAppState extends DirPickerModelBase {
 
 }
 
-const dirPickerAppState = new DirPickerAppState( {id: 0} );
+const dirPickerAppState = new AppStateModel( {id: 0} );
 dirPickerAppState.fetch();
 dirPickerAppState.save();
 export default dirPickerAppState;

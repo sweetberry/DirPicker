@@ -1,11 +1,11 @@
 "use strict";
 
-import DirPickerModelBase from './dirPickerModelBase';
+import BaseModel from './baseModel';
 
 /**
  * リスト型変数の各項目を表すモデル
  */
-export default class DirPickerVariableRow extends DirPickerModelBase {
+export default class VariableRowModel extends BaseModel {
 
   /**
    * @param {object} [attr]

@@ -2,9 +2,9 @@
 
 // noinspection JSUnresolvedVariable
 import {LayoutView} from 'backbone.marionette'
-import DirPickerView from './dirPicker'
-import SettingTemplatesView from './dirPickerSettingTemplates'
-import SettingVariablesView from './dirPickerSettingVariables'
+import DirPickerView from './dirPickerView'
+import SettingTemplatesView from './settingTemplatesView'
+import SettingVariablesView from './settingVariablesView'
 import {suppressPageChangeOnDrop} from '../common/suppressPageChangeOnDrop'
 import command from '../common/commands'
 

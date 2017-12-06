@@ -1,15 +1,17 @@
 "use strict";
 
-import DirPickerCollectionBase from './dirPickerCollectionBase'
+import BaseCollection from './baseCollection'
 // noinspection JSUnresolvedVariable
 import {LocalStorage} from 'backbone.localstorage'
-import VariableModel from '../models/dirPickerVariable'
+import VariableModel from '../models/variableModel'
 // noinspection JSUnresolvedVariable
+// noinspection NpmUsedModulesInstalled
 import {remote} from 'electron'
 import path from 'path'
 import fse from 'fs-extra';
 import fs from 'fs';
 
+// noinspection NpmUsedModulesInstalled
 import parse from 'csv-parse/lib/sync'
 
 const USER_DATA_PATH = remote.app.getPath( 'userData' );
@@ -18,7 +20,7 @@ const VAR_FOLDER_PATH = path.join( USER_DATA_PATH, 'variables' );
 /**
  * Variableを束ねるコレクション
  */
-export class DirPickerVariables extends DirPickerCollectionBase {
+export class VariablesCollection extends BaseCollection {
 
   /**
    * @param {object} [attr]
@@ -38,7 +40,7 @@ export class DirPickerVariables extends DirPickerCollectionBase {
 
     /**
      *
-     * @type {DirPickerVariable}
+     * @type {VariableModel}
      */
     this.model = VariableModel;
 
@@ -77,36 +79,42 @@ function importVariables () {
   // console.log( dirPickerVariablesCollection.length );
   const files = fs.readdirSync( VAR_FOLDER_PATH );
   files.forEach( ( filename ) => {
-    const input = fs.readFileSync( path.join( VAR_FOLDER_PATH, filename ) );
-    const data = parse( input, {relax_column_count: true} );
-    const dataObjList = data.map( ( row ) => {
-      const label = (row.length > 1) ? row[1] : row[0];
-      const val = row[0];
-      return {val: val, label: label};
-    } );
-    const variableName = path.basename( filename, path.extname( filename ) );
-    // console.log( `filename:: ${filename}` );
-    // console.log( dataObjList );
-    // console.log( `variableName:: ${variableName}` );
+    try {
+      const input = fs.readFileSync( path.join( VAR_FOLDER_PATH, filename ) );
+      const data = parse( input, {relax_column_count: true} );
+      // noinspection JSUnresolvedFunction
+      const dataObjList = data.map( ( row ) => {
+        const label = (row.length > 1) ? row[1] : row[0];
+        const val = row[0];
+        return {val: val, label: label};
+      } );
+      const variableName = path.basename( filename, path.extname( filename ) );
+      // console.log( `filename:: ${filename}` );
+      // console.log( dataObjList );
+      // console.log( `variableName:: ${variableName}` );
 
-    let targetVariable = dirPickerVariablesCollection.find( {name: variableName} );
-    // console.log( `targetVariable:: ${targetVariable}` );
+      let targetVariable = dirPickerVariablesCollection.find( {name: variableName} );
+      // console.log( `targetVariable:: ${targetVariable}` );
 
-    // 同名variableは一旦削除
-    if (targetVariable) {
-      // console.log( `remove:${targetVariable.get( 'name' )}` );
-      targetVariable.destroy();
+      // 同名variableは一旦削除
+      if (targetVariable) {
+        // console.log( `remove:${targetVariable.get( 'name' )}` );
+        targetVariable.destroy();
+        // console.log( dirPickerVariablesCollection.length );
+      }
+      dirPickerVariablesCollection.create( {name: variableName, list: dataObjList}, {wait: true} );
+      // console.log( `create:${variableName}` );
       // console.log( dirPickerVariablesCollection.length );
+    } catch (e) {
+      console.error( e );
     }
-    dirPickerVariablesCollection.create( {name: variableName, list: dataObjList}, {wait: true} );
-    // console.log( `create:${variableName}` );
-    // console.log( dirPickerVariablesCollection.length );
+
   } );
 }
 
 // 起動時に一度実行します
 ensureDefaultVariables();
 
-const dirPickerVariablesCollection = new DirPickerVariables();
+const dirPickerVariablesCollection = new VariablesCollection();
 dirPickerVariablesCollection.fetch();
 export default dirPickerVariablesCollection;

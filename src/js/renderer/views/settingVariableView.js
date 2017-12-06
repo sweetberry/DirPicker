@@ -1,19 +1,20 @@
 "use strict";
 
 import _ from 'underscore';
-import DIR_PICKER_SETTING_VARIABLE_TEMPLATE from '../templates/dirPickerSettingVariable.html';
-import DirPickerSettingVariableRowView from  './dirPickerSettingVariableRow';
+import SETTING_VARIABLE_TEMPLATE from '../templates/settingVariable.html';
+import SettingVariableRowView from './settingVariableRowView';
+// noinspection JSUnresolvedVariable
 import {CompositeView} from 'backbone.marionette';
 // import 'backbone-event-logger';
 
 /**
  * setting画面のvariableを扱うviewです。
  */
-export default class DirPickerSettingVariableView extends CompositeView.extend( {
+export default class SettingVariableView extends CompositeView.extend( {
   model             : undefined,//variableModel
   collection        : undefined,//variableModel.listCollection
-  template          : DIR_PICKER_SETTING_VARIABLE_TEMPLATE,
-  childView         : DirPickerSettingVariableRowView,
+  template          : SETTING_VARIABLE_TEMPLATE,
+  childView         : SettingVariableRowView,
   childViewContainer: '.js-variable-row-list-container',
   className         : 'col-lg-4 col-md-6',
   reorderOnSort     : true,
@@ -55,7 +56,7 @@ export default class DirPickerSettingVariableView extends CompositeView.extend( 
 
     /**
      * リスト型変数の項目リストCollection
-     * @type {DirPickerVariableList}
+     * @type {VariableListCollection}
      */
     this.collection = this.model.listCollection;
   }
@@ -113,7 +114,8 @@ export default class DirPickerSettingVariableView extends CompositeView.extend( 
    * @param {event} e
    */
   onKeyupNameInput ( e ) {
-    if (e.which == 13) {
+    // noinspection JSUnresolvedVariable
+    if (e.which === 13) {
       this.ui.nameInput.blur();
     }
   }

@@ -1,14 +1,14 @@
 "use strict";
 
-import DirPickerCollectionBase from './dirPickerCollectionBase'
+import BaseCollection from './baseCollection'
 // noinspection JSUnresolvedVariable
 import {LocalStorage} from 'backbone.localstorage'
-import DirPickerTemplate from '../models/dirPickerTemplate'
+import DirPickerTemplate from '../models/templateModel'
 
 /**
  * Templateを束ねるコレクション
  */
-export class DirPickerTemplates extends DirPickerCollectionBase {
+export class TemplatesCollection extends BaseCollection {
 
   /**
    * @param {object} [attr]
@@ -28,7 +28,7 @@ export class DirPickerTemplates extends DirPickerCollectionBase {
 
     /**
      *
-     * @type {DirPickerTemplate}
+     * @type {TemplateModel}
      */
     this.model = DirPickerTemplate;
 
@@ -43,7 +43,7 @@ export class DirPickerTemplates extends DirPickerCollectionBase {
 
 }
 
-const dirPickerTemplatesCollection = new DirPickerTemplates();
+const dirPickerTemplatesCollection = new TemplatesCollection();
 dirPickerTemplatesCollection.fetch();
 export default dirPickerTemplatesCollection;
 

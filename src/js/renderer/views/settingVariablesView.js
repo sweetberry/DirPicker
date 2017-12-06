@@ -1,15 +1,16 @@
 "use strict";
 
 import _ from 'underscore';
-import DIR_PICKER_SETTING_VARIABLE_TEMPLATE from '../templates/dirPickerSettingVariables.html'
-import DirPickerSettingVariableView from './dirPickerSettingVariable'
-import variablesCollection from '../collections/dirPickerVariables'
+import SETTING_VARIABLE_TEMPLATE from '../templates/settingVariables.html'
+import SettingVariableView from './settingVariableView'
+import variablesCollection from '../collections/variablesCollection'
+// noinspection JSUnresolvedVariable
 import {CompositeView} from 'backbone.marionette'
 
-export default class DirPickerSettingVariablesView extends CompositeView.extend( {
+export default class SettingVariablesView extends CompositeView.extend( {
   collection        : variablesCollection,
-  childView         : DirPickerSettingVariableView,
-  template          : DIR_PICKER_SETTING_VARIABLE_TEMPLATE,
+  childView         : SettingVariableView,
+  template          : SETTING_VARIABLE_TEMPLATE,
   className         : "",
   childViewContainer: '.js-variable-list-container',
   reorderOnSort     : true,
@@ -40,6 +41,7 @@ export default class DirPickerSettingVariablesView extends CompositeView.extend(
    * @returns {{getVariablesCount: getVariablesCount}}
    */
   templateHelpers () {
+    // noinspection JSValidateTypes
     return {
       getVariablesCount: () => {
         return this.collection.length;

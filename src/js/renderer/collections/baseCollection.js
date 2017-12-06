@@ -1,13 +1,13 @@
 "use strict";
 
-import _ from 'underscore';
-import {Collection} from 'backbone';
+import _ from 'underscore'
+import {Collection} from 'backbone'
 // import 'backbone-event-logger';
 
 /**
  * Collectionの雛形。mixinがうまく書けなかったのでbaseClassを定義しています。
  */
-export default class DirPickerCollectionBase extends Collection {
+export default class BaseCollection extends Collection {
 
   /**
    * @param {object} [attr]
@@ -23,7 +23,7 @@ export default class DirPickerCollectionBase extends Collection {
    */
   isUniqueName ( name ) {
     return !_.find( this.models, ( model )=> {
-      return model.get( 'name' ) == name;
+      return model.get( 'name' ) === name;
     } );
   }
 }

@@ -1,14 +1,15 @@
 "use strict";
 
-import DIR_PICKER_SETTING_VARIABLE_ROW_TEMPLATE from '../templates/dirPickerSettingVariableRow.html';
+import SETTING_VARIABLE_ROW_TEMPLATE from '../templates/settingVariableRow.html';
+// noinspection JSUnresolvedVariable
 import {ItemView} from 'backbone.marionette';
 
 /**
  * setting画面のvariable内のリスト項目を扱うviewです。
  */
-export default class DirPickerSettingVariableRowView extends ItemView.extend( {
+export default class SettingVariableRowView extends ItemView.extend( {
   model      : undefined,//variableRowModel
-  template   : DIR_PICKER_SETTING_VARIABLE_ROW_TEMPLATE,
+  template   : SETTING_VARIABLE_ROW_TEMPLATE,
   tagName    : 'li',
   className  : 'list-group-item js-variable-row',
   ui         : {
@@ -32,6 +33,7 @@ export default class DirPickerSettingVariableRowView extends ItemView.extend( {
    * @returns {{getID: getID}}
    */
   templateHelpers () {
+    // noinspection JSValidateTypes
     return {
       getID: ()=> {
         return this.model.cid;

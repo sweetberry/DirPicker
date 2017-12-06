@@ -1,19 +1,19 @@
 "use strict";
 
 import _ from 'underscore'
-import DIR_PICKER_SETTING_TEMPLATES_TEMPLATE from '../templates/dirPickerSettingTemplates.html'
-import ChildView from './dirPickerSettingTemplateRow'
-import templatesCollection from '../collections/dirPickerTemplates'
+import SETTING_TEMPLATES_TEMPLATE from '../templates/settingTemplates.html'
+import SettingTemplateRowView from './settingTemplateRowView'
+import templatesCollection from '../collections/templatesCollection'
 // noinspection JSUnresolvedVariable
 import {CompositeView} from 'backbone.marionette';
 
 /**
  * setting画面のtemplateリストを扱うviewです。
  */
-export default class DirPickerSettingTemplatesView extends CompositeView.extend( {
+export default class SettingTemplatesView extends CompositeView.extend( {
   collection        : templatesCollection,
-  childView         : ChildView,
-  template          : DIR_PICKER_SETTING_TEMPLATES_TEMPLATE,
+  childView         : SettingTemplateRowView,
+  template          : SETTING_TEMPLATES_TEMPLATE,
   className         : "",
   childViewContainer: '.js-template-table-container',
   reorderOnSort     : true,

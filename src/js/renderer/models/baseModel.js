@@ -6,7 +6,7 @@ import {Model} from 'backbone';
 /**
  * Modelの雛形。mixinがうまく書けなかったのでbaseClassを定義しています。
  */
-export default class DirPickerModelBase extends Model {
+export default class BaseModel extends Model {
 
   /**
    * @param {object} [attr]
@@ -21,11 +21,12 @@ export default class DirPickerModelBase extends Model {
    * @returns {string} uniqueName
    */
   makeUniqueName ( name ) {
-    var dstName = name;
+    let dstName = name;
+    let tempName;
     if (this.collection && !this.collection.isUniqueName( name )) {
-      var inc = 2;
+      let inc = 2;
       do {
-        var tempName = name + '_' + inc;
+        tempName = name + '_' + inc;
         inc++;
       } while (!this.collection.isUniqueName( tempName ));
       dstName = tempName;
