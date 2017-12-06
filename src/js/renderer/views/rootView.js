@@ -12,7 +12,7 @@ export default class RootView extends LayoutView.extend( {
   el      : 'body',
   ui      : {
     'exportBtn': '.js-export-btn',
-    'importBtn': 'js-import-btn'
+    'importBtn': '.js-import-btn'
   },
   template: false,
   regions : {
