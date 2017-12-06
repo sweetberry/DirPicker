@@ -1,11 +1,12 @@
 "use strict";
 
-import {LayoutView} from 'backbone.marionette';
-import DirPickerView from './dirPicker';
-import SettingTemplatesView from './dirPickerSettingTemplates';
-import SettingVariablesView from './dirPickerSettingVariables';
-import {suppressPageChangeOnDrop} from '../common/suppressPageChangeOnDrop';
-import command from '../common/commands';
+// noinspection JSUnresolvedVariable
+import {LayoutView} from 'backbone.marionette'
+import DirPickerView from './dirPicker'
+import SettingTemplatesView from './dirPickerSettingTemplates'
+import SettingVariablesView from './dirPickerSettingVariables'
+import {suppressPageChangeOnDrop} from '../common/suppressPageChangeOnDrop'
+import command from '../common/commands'
 
 export default class RootView extends LayoutView.extend( {
   el      : 'body',
@@ -28,7 +29,7 @@ export default class RootView extends LayoutView.extend( {
   }
 } ) {
 
-  //noinspection JSMethodCanBeStatic
+  //noinspection JSUnusedGlobalSymbols
   onRender () {
     suppressPageChangeOnDrop();
     this.mainRegion.show( new DirPickerView() );

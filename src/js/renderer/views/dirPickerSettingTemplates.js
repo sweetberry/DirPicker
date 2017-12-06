@@ -1,9 +1,10 @@
 "use strict";
 
-import _ from 'underscore';
-import DIR_PICKER_SETTING_TEMPLATES_TEMPLATE from '../templates/dirPickerSettingTemplates.html';
+import _ from 'underscore'
+import DIR_PICKER_SETTING_TEMPLATES_TEMPLATE from '../templates/dirPickerSettingTemplates.html'
 import ChildView from './dirPickerSettingTemplateRow'
 import templatesCollection from '../collections/dirPickerTemplates'
+// noinspection JSUnresolvedVariable
 import {CompositeView} from 'backbone.marionette';
 
 /**
@@ -39,9 +40,9 @@ export default class DirPickerSettingTemplatesView extends CompositeView.extend(
    * @returns {{getTemplatesCount: getTemplatesCount}}
    */
   templateHelpers () {
-    //noinspection JSUnusedGlobalSymbols
+    //noinspection JSUnusedGlobalSymbols,JSValidateTypes
     return {
-      getTemplatesCount: ()=> {
+      getTemplatesCount: () => {
         return this.collection.length;
       }
     }
@@ -55,11 +56,11 @@ export default class DirPickerSettingTemplatesView extends CompositeView.extend(
       forcePlaceholderSize: true,
       items               : 'tr',
       handle              : '.js-template-handle'
-    } ).bind( 'sortupdate', ()=> {
+    } ).bind( 'sortupdate', () => {
       this.updateItemSortIndex( this.ui.childViewContainer.find( '.js-template-model-id' ) );
-    } ).bind( 'sortstart', ( e, ui )=> {
+    } ).bind( 'sortstart', ( e, ui ) => {
       ui.item.css( 'display', 'block' )
-    } ).bind( 'sortstop', ( e, ui )=> {
+    } ).bind( 'sortstop', ( e, ui ) => {
       ui.item.css( 'display', '' )
     } );
   }
@@ -93,7 +94,7 @@ export default class DirPickerSettingTemplatesView extends CompositeView.extend(
    * @param {node[]} elements data-model-idの指定があるエレメントの配列
    */
   updateItemSortIndex ( elements ) {
-    _.each( elements, ( element, index )=> {
+    _.each( elements, ( element, index ) => {
       //noinspection JSUnresolvedVariable
       this.collection.get( element.dataset.modelId ).save( 'sort', index );
     } );
