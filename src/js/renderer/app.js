@@ -5,7 +5,6 @@ import RootView from './views/rootView'
 
 import 'bootstrap';
 import 'bootstrap-3-typeahead';
-import 'html5sortable';
 import './common/setupMenu';
 
 const App = new Marionette.Application();

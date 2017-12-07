@@ -6,6 +6,7 @@ import SettingTemplateRowView from './settingTemplateRowView'
 import templatesCollection from '../collections/templatesCollection'
 // noinspection JSUnresolvedVariable
 import {CompositeView} from 'backbone.marionette';
+import sortable from 'html5sortable';
 
 /**
  * setting画面のtemplateリストを扱うviewです。
@@ -58,16 +59,20 @@ export default class SettingTemplatesView extends CompositeView.extend( {
    * 並び替え機能を有効にします。
    */
   sortStart () {
-    this.ui.childViewContainer.sortable( {
+    const sortableDom = sortable( this.ui.childViewContainer, {
       forcePlaceholderSize: true,
       items               : 'tr',
       handle              : '.js-template-handle'
-    } ).bind( 'sortupdate', () => {
+    } );
+
+    sortableDom[0].addEventListener( 'sortupdate', () => {
       this.updateItemSortIndex( this.ui.childViewContainer.find( '.js-template-model-id' ) );
-    } ).bind( 'sortstart', ( e, ui ) => {
-      ui.item.css( 'display', 'block' )
-    } ).bind( 'sortstop', ( e, ui ) => {
-      ui.item.css( 'display', '' )
+    } );
+    sortableDom[0].addEventListener( 'sortstart', ( e ) => {
+      e.detail.item.display = 'block';
+    } );
+    sortableDom[0].addEventListener( 'sortstop', ( e ) => {
+      e.detail.item.display = '';
     } );
   }
 
@@ -75,9 +80,7 @@ export default class SettingTemplatesView extends CompositeView.extend( {
    * 並び替え機能を無効にします。
    */
   sortDestroy () {
-    if (this.ui.childViewContainer.sortable) {
-      this.ui.childViewContainer.sortable( 'destroy' );
-    }
+    sortable( this.ui.childViewContainer, 'destroy' );
   }
 
   //noinspection JSUnusedGlobalSymbols
