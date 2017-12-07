@@ -24,12 +24,12 @@ export default class TemplateModel extends BaseModel {
   //noinspection JSMethodCanBeStatic
   /**
    *
-   * @returns {{name: '名称未設定テンプレート', path: '/path/to/your/favorite/thing'}}
+   * @returns {{name: '名称未設定テンプレート', path: '/path/to/your/<favorite>/thing'}}
    */
   get defaults () {
     return {
       "name": '名称未設定テンプレート',
-      "path": '/path/to/your/favorite/thing'
+      "path": '/path/to/your/<favorite>/thing'
     }
   }
 

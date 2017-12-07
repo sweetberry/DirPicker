@@ -1,12 +1,20 @@
 <script type="text/x-handlebars-template">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <span class="btn btn-sm btn-primary pull-right js-template-add-btn"><i class="fa fa-plus-circle"></i> add</span>
+            <span class="btn btn-sm btn-primary pull-right js-template-add-btn"><i
+                    class="fa fa-plus-circle"></i> add</span>
             <h4 style="margin-top:0;margin-bottom:0;">Templates
-            <span class="btn btn-sm btn-primary" data-toggle="collapse" data-target="#templates_table">
+                <span class="btn btn-sm btn-primary" style="margin-right:2em;" data-toggle="collapse" data-target="#templates_table">
                 <i class="fa fa-list"></i>
-                <span class="badge js-template-num-badge"><%= getTemplatesCount() %></span>
+                <span class="badge small js-template-num-badge"
+                      style="margin-left:0.5em;"><%= getTemplatesCount() %></span>
             </span>
+                <span class="btn btn-sm btn-primary js-templates-import-btn">
+                    <i class="fa fa-download"></i> Import</span>
+                <span class="btn input-sm js-open-templates-folder-btn">
+                    <i class="fa fa-folder-open" style="display: block;"></i></span>
+                <span class="btn btn-sm btn-primary js-templates-export-btn">
+                    <i class="fa fa-upload"></i> Export</span>
             </h4>
         </div>
         <div id="templates_table" class="panel-body collapse in">

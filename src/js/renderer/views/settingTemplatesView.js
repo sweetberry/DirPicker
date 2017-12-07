@@ -18,15 +18,21 @@ export default class SettingTemplatesView extends CompositeView.extend( {
   childViewContainer: '.js-template-table-container',
   reorderOnSort     : true,
   ui                : {
-    childViewContainer: '.js-template-table-container',
-    addBtn            : '.js-template-add-btn',
-    handle            : '.js-template-handle',
-    badge             : '.js-template-num-badge'
+    childViewContainer    : '.js-template-table-container',
+    addBtn                : '.js-template-add-btn',
+    handle                : '.js-template-handle',
+    badge                 : '.js-template-num-badge',
+    openTemplatesFolderBtn: '.js-open-templates-folder-btn',
+    importTemplatesBtn    : '.js-templates-import-btn',
+    ExportTemplatesBtn    : '.js-templates-export-btn',
   },
   events            : {
-    'click @ui.addBtn'     : 'onAddClick',
-    'mouseenter @ui.handle': 'sortStart',
-    'mouseleave @ui.handle': 'sortDestroy'
+    'click @ui.addBtn'                : 'onAddClick',
+    'click @ui.openTemplatesFolderBtn': 'onClickOpenTemplatesFolderBtn',
+    'click @ui.importTemplatesBtn'    : 'onClickImportTemplatesBtn',
+    'click @ui.ExportTemplatesBtn'    : 'onClickExportTemplatesBtn',
+    'mouseenter @ui.handle'           : 'sortStart',
+    'mouseleave @ui.handle'           : 'sortDestroy'
   },
   collectionEvents  : {
     'add'   : 'badgeUpdate',
@@ -108,4 +114,16 @@ export default class SettingTemplatesView extends CompositeView.extend( {
     this.ui.badge.text( this.collection.length );
   }
 
+  onClickImportTemplatesBtn () {
+    this.collection.importTemplates();
+  }
+
+  onClickExportTemplatesBtn () {
+    this.collection.exportTemplates();
+  }
+
+  // noinspection JSMethodCanBeStatic
+  onClickOpenTemplatesFolderBtn () {
+    this.collection.openTemplatesFolder();
+  }
 }
