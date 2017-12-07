@@ -10,10 +10,6 @@ import command from '../common/commands'
 
 export default class RootView extends LayoutView.extend( {
   el      : 'body',
-  ui      : {
-    'exportBtn': '.js-export-btn',
-    'importBtn': '.js-import-btn'
-  },
   template: false,
   regions : {
     headerRegion   : "#header",
@@ -23,10 +19,6 @@ export default class RootView extends LayoutView.extend( {
     footerRegion   : "#footer",
     hideRegion     : "#hide"
   },
-  events  : {
-    'click @ui.exportBtn': 'onClickExport',
-    'click @ui.importBtn': 'onClickImport'
-  }
 } ) {
 
   //noinspection JSUnusedGlobalSymbols
@@ -35,15 +27,5 @@ export default class RootView extends LayoutView.extend( {
     this.mainRegion.show( new DirPickerView() );
     this.templatesRegion.show( new SettingTemplatesView() );
     this.variablesRegion.show( new SettingVariablesView() );
-  }
-
-  //noinspection JSMethodCanBeStatic
-  onClickExport () {
-    command.saveSetting();
-  }
-
-  //noinspection JSMethodCanBeStatic
-  onClickImport () {
-    command.loadSetting();
   }
 }
