@@ -1,5 +1,6 @@
 "use strict";
 
+import sortable from 'html5sortable';
 import _ from 'underscore';
 import SETTING_VARIABLE_TEMPLATE from '../templates/settingVariables.html'
 import SettingVariableView from './settingVariableView'
@@ -82,11 +83,11 @@ export default class SettingVariablesView extends CompositeView.extend( {
    * 並び替え機能を有効にします。
    */
   sortStart () {
-    this.ui.childViewContainer.sortable( {
+    const sortableDom = sortable( this.ui.childViewContainer, {
       forcePlaceholderSize: true,
-      //placeholderClass: 'col-lg-4 col-md-6',
       handle              : '.js-variable-handle'
-    } ).bind( 'sortupdate', () => {
+    } );
+    sortableDom[0].addEventListener( 'sortupdate', () => {
       this.updateItemSortIndex( this.ui.childViewContainer.find( '.js-variable-model-id' ) );
     } );
   }
@@ -95,9 +96,7 @@ export default class SettingVariablesView extends CompositeView.extend( {
    * 並び替え機能を無効にします。
    */
   sortDestroy () {
-    if (this.ui.childViewContainer.sortable) {
-      this.ui.childViewContainer.sortable( 'destroy' );
-    }
+    sortable( this.ui.childViewContainer, 'destroy' );
   }
 
   /**

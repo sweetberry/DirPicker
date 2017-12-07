@@ -1,5 +1,6 @@
 "use strict";
 
+import sortable from 'html5sortable';
 import _ from 'underscore';
 import SETTING_VARIABLE_TEMPLATE from '../templates/settingVariable.html';
 import SettingVariableRowView from './settingVariableRowView';
@@ -131,11 +132,11 @@ export default class SettingVariableView extends CompositeView.extend( {
    * 並び替え機能を有効にします。
    */
   sortStart () {
-    this.ui.childViewContainer.sortable( {
+    const sortableDom = sortable( this.ui.childViewContainer, {
       forcePlaceholderSize: true,
       handle              : '.js-variable-row-handle'
-    } ).bind( 'sortupdate', ()=> {
-      //console.log("variablesSort");
+    } );
+    sortableDom[0].addEventListener( 'sortupdate', () => {
       this.updateItemSortIndex( this.ui.childViewContainer.find( '.js-variable-row-model-id' ) );
     } );
   }
@@ -144,9 +145,7 @@ export default class SettingVariableView extends CompositeView.extend( {
    * 並び替え機能を無効にします。
    */
   sortDestroy () {
-    if (this.ui.childViewContainer.sortable) {
-      this.ui.childViewContainer.sortable( 'destroy' );
-    }
+    sortable( this.ui.childViewContainer, 'destroy' );
   }
 
   /**
@@ -173,7 +172,7 @@ export default class SettingVariableView extends CompositeView.extend( {
    * @param {node[]} elements data-model-idの指定があるエレメントの配列
    */
   updateItemSortIndex ( elements ) {
-    _.each( elements, ( element, index )=> {
+    _.each( elements, ( element, index ) => {
       this.collection.get( element.dataset.modelId ).set( 'sort', index, {silent: true} );
     } );
     this.model.updateList();
