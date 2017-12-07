@@ -1,14 +1,14 @@
 "use strict";
 
 import _ from 'underscore'
-import DIR_PICKER_SETTING_TEMPLATE_ROW_TEMPLATE from '../templates/dirPickerSettingTemplateRow.html'
-import variablesCollection from '../collections/dirPickerVariables'
+import SETTING_TEMPLATE_ROW_TEMPLATE from '../templates/settingTemplateRow.html'
+import variablesCollection from '../collections/variablesCollection'
 // noinspection JSUnresolvedVariable
 import {ItemView} from 'backbone.marionette'
 
-export default class DirPickerSettingTemplateRowView extends ItemView.extend( {
+export default class SettingTemplateRowView extends ItemView.extend( {
   model      : undefined,
-  template   : DIR_PICKER_SETTING_TEMPLATE_ROW_TEMPLATE,
+  template   : SETTING_TEMPLATE_ROW_TEMPLATE,
   tagName    : 'tr',
   ui         : {
     name     : '.js-template-name',

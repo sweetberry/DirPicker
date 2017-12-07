@@ -1,15 +1,16 @@
 "use strict";
 
-import DIR_PICKER_TEMPLATE from '../templates/dirPicker.html';
+import DIR_PICKER_TEMPLATE from '../templates/dirPickerTemplate.html';
 import _ from 'underscore';
 import path from 'path';
-import dirPickerAppState from '../models/dirPickerAppState';
+import appStateModel from '../models/appStateModel';
+// noinspection JSUnresolvedVariable
 import {LayoutView} from 'backbone.marionette';
 
 export default class DirPickerView extends LayoutView.extend( {
   className  : "js-view-dir-picker",
   template   : DIR_PICKER_TEMPLATE,
-  model      : dirPickerAppState,
+  model      : appStateModel,
   modelEvents: {
     'change': 'render'
   },
@@ -112,11 +113,11 @@ export default class DirPickerView extends LayoutView.extend( {
     let difference = 0;
     const element = e.target;
 
-    if (e.keyCode == 38) {
+    if (e.keyCode === 38) {
       difference = 1;
-    } else if (e.keyCode == 40) {
+    } else if (e.keyCode === 40) {
       difference = -1;
-    } else if (e.keyCode == 13) {
+    } else if (e.keyCode === 13) {
       this.render();
     } else {
       return;

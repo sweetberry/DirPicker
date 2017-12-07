@@ -1,28 +1,35 @@
 "use strict";
 
 import _ from 'underscore';
-import DIR_PICKER_SETTING_VARIABLE_TEMPLATE from '../templates/dirPickerSettingVariables.html';
-import DirPickerSettingVariableView from './dirPickerSettingVariable'
-import variablesCollection from '../collections/dirPickerVariables';
-import {CompositeView} from 'backbone.marionette';
+import SETTING_VARIABLE_TEMPLATE from '../templates/settingVariables.html'
+import SettingVariableView from './settingVariableView'
+import variablesCollection from '../collections/variablesCollection'
+// noinspection JSUnresolvedVariable
+import {CompositeView} from 'backbone.marionette'
 
-export default class DirPickerSettingVariablesView extends CompositeView.extend( {
+export default class SettingVariablesView extends CompositeView.extend( {
   collection        : variablesCollection,
-  childView         : DirPickerSettingVariableView,
-  template          : DIR_PICKER_SETTING_VARIABLE_TEMPLATE,
+  childView         : SettingVariableView,
+  template          : SETTING_VARIABLE_TEMPLATE,
   className         : "",
   childViewContainer: '.js-variable-list-container',
   reorderOnSort     : true,
   ui                : {
-    childViewContainer: '.js-variable-list-container',
-    addBtn            : '.js-variable-add-btn',
-    handle            : '.js-variable-handle',
-    badge             : '.js-variable-num-badge'
+    childViewContainer    : '.js-variable-list-container',
+    addBtn                : '.js-variable-add-btn',
+    handle                : '.js-variable-handle',
+    badge                 : '.js-variable-num-badge',
+    openVariablesFolderBtn: '.js-open-variables-folder-btn',
+    importVariablesBtn    : '.js-variables-import-btn',
+    exportVariablesBtn    : '.js-variables-export-btn',
   },
   events            : {
-    'click @ui.addBtn'     : 'onClickAddBtn',
-    'mouseenter @ui.handle': 'sortStart',
-    'mouseleave @ui.handle': 'sortDestroy'
+    'click @ui.addBtn'                : 'onClickAddBtn',
+    'click @ui.openVariablesFolderBtn': 'onClickOpenVariablesFolderBtn',
+    'click @ui.importVariablesBtn'    : 'onClickImportVariablesBtn',
+    'click @ui.exportVariablesBtn'    : 'onClickExportVariablesBtn',
+    'mouseenter @ui.handle'           : 'sortStart',
+    'mouseleave @ui.handle'           : 'sortDestroy'
   },
   collectionEvents  : {
     'add'   : 'badgeUpdate',
@@ -35,11 +42,25 @@ export default class DirPickerSettingVariablesView extends CompositeView.extend(
    * @returns {{getVariablesCount: getVariablesCount}}
    */
   templateHelpers () {
+    // noinspection JSValidateTypes
     return {
-      getVariablesCount: ()=> {
+      getVariablesCount: () => {
         return this.collection.length;
       }
     }
+  }
+
+  onClickImportVariablesBtn () {
+    this.collection.importVariables()
+  }
+
+  onClickExportVariablesBtn () {
+    this.collection.exportVariables()
+  }
+
+  // noinspection JSMethodCanBeStatic
+  onClickOpenVariablesFolderBtn () {
+    this.collection.openVariablesFolder();
   }
 
   //noinspection JSUnusedGlobalSymbols
@@ -65,7 +86,7 @@ export default class DirPickerSettingVariablesView extends CompositeView.extend(
       forcePlaceholderSize: true,
       //placeholderClass: 'col-lg-4 col-md-6',
       handle              : '.js-variable-handle'
-    } ).bind( 'sortupdate', ()=> {
+    } ).bind( 'sortupdate', () => {
       this.updateItemSortIndex( this.ui.childViewContainer.find( '.js-variable-model-id' ) );
     } );
   }
@@ -84,7 +105,7 @@ export default class DirPickerSettingVariablesView extends CompositeView.extend(
    * @param {node[]} elements data-model-idの指定があるエレメントの配列
    */
   updateItemSortIndex ( elements ) {
-    _.each( elements, ( element, index )=> {
+    _.each( elements, ( element, index ) => {
       this.collection.get( element.dataset.modelId ).save( 'sort', index );
     } );
   }

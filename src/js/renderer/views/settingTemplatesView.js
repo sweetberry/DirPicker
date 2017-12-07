@@ -1,32 +1,38 @@
 "use strict";
 
 import _ from 'underscore'
-import DIR_PICKER_SETTING_TEMPLATES_TEMPLATE from '../templates/dirPickerSettingTemplates.html'
-import ChildView from './dirPickerSettingTemplateRow'
-import templatesCollection from '../collections/dirPickerTemplates'
+import SETTING_TEMPLATES_TEMPLATE from '../templates/settingTemplates.html'
+import SettingTemplateRowView from './settingTemplateRowView'
+import templatesCollection from '../collections/templatesCollection'
 // noinspection JSUnresolvedVariable
 import {CompositeView} from 'backbone.marionette';
 
 /**
  * setting画面のtemplateリストを扱うviewです。
  */
-export default class DirPickerSettingTemplatesView extends CompositeView.extend( {
+export default class SettingTemplatesView extends CompositeView.extend( {
   collection        : templatesCollection,
-  childView         : ChildView,
-  template          : DIR_PICKER_SETTING_TEMPLATES_TEMPLATE,
+  childView         : SettingTemplateRowView,
+  template          : SETTING_TEMPLATES_TEMPLATE,
   className         : "",
   childViewContainer: '.js-template-table-container',
   reorderOnSort     : true,
   ui                : {
-    childViewContainer: '.js-template-table-container',
-    addBtn            : '.js-template-add-btn',
-    handle            : '.js-template-handle',
-    badge             : '.js-template-num-badge'
+    childViewContainer    : '.js-template-table-container',
+    addBtn                : '.js-template-add-btn',
+    handle                : '.js-template-handle',
+    badge                 : '.js-template-num-badge',
+    openTemplatesFolderBtn: '.js-open-templates-folder-btn',
+    importTemplatesBtn    : '.js-templates-import-btn',
+    ExportTemplatesBtn    : '.js-templates-export-btn',
   },
   events            : {
-    'click @ui.addBtn'     : 'onAddClick',
-    'mouseenter @ui.handle': 'sortStart',
-    'mouseleave @ui.handle': 'sortDestroy'
+    'click @ui.addBtn'                : 'onAddClick',
+    'click @ui.openTemplatesFolderBtn': 'onClickOpenTemplatesFolderBtn',
+    'click @ui.importTemplatesBtn'    : 'onClickImportTemplatesBtn',
+    'click @ui.ExportTemplatesBtn'    : 'onClickExportTemplatesBtn',
+    'mouseenter @ui.handle'           : 'sortStart',
+    'mouseleave @ui.handle'           : 'sortDestroy'
   },
   collectionEvents  : {
     'add'   : 'badgeUpdate',
@@ -108,4 +114,16 @@ export default class DirPickerSettingTemplatesView extends CompositeView.extend(
     this.ui.badge.text( this.collection.length );
   }
 
+  onClickImportTemplatesBtn () {
+    this.collection.importTemplates();
+  }
+
+  onClickExportTemplatesBtn () {
+    this.collection.exportTemplates();
+  }
+
+  // noinspection JSMethodCanBeStatic
+  onClickOpenTemplatesFolderBtn () {
+    this.collection.openTemplatesFolder();
+  }
 }

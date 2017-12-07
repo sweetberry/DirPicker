@@ -1,11 +1,11 @@
 "use strict";
 
-import DirPickerModelBase from './dirPickerModelBase';
+import BaseModel from './baseModel';
 
 /**
  * Templateを表すモデル。
  */
-export default class DirPickerTemplate extends DirPickerModelBase {
+export default class TemplateModel extends BaseModel {
 
   /**
    * @param {object} [attr]
@@ -17,18 +17,19 @@ export default class DirPickerTemplate extends DirPickerModelBase {
     //eventsLoggerを有効化
     // this.debugEvents( 'ModelsTemplate' );
 
+    // noinspection JSCheckFunctionSignatures
     this.set( 'name', this.makeUniqueName( (attr && attr.name) || this.defaults.name ) );
   }
 
   //noinspection JSMethodCanBeStatic
   /**
    *
-   * @returns {{name: '名称未設定テンプレート', path: '/path/to/your/favorite/thing'}}
+   * @returns {{name: '名称未設定テンプレート', path: '/path/to/your/<favorite>/thing'}}
    */
   get defaults () {
     return {
       "name": '名称未設定テンプレート',
-      "path": '/path/to/your/favorite/thing'
+      "path": '/path/to/your/<favorite>/thing'
     }
   }
 

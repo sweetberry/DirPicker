@@ -1,9 +1,9 @@
 "use strict";
 
-import DirPickerCollectionBase from './dirPickerCollectionBase';
-import VariableRowModel from '../models/dirPickerVariableRow'
+import BaseCollection from './baseCollection';
+import VariableRowModel from '../models/variableRowModel'
 
-export default class DirPickerVariableList extends DirPickerCollectionBase {
+export default class VariableListCollection extends BaseCollection {
 
   /**
    * @param {object} [attr]
