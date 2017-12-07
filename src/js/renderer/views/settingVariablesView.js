@@ -21,14 +21,15 @@ export default class SettingVariablesView extends CompositeView.extend( {
     badge                 : '.js-variable-num-badge',
     openVariablesFolderBtn: '.js-open-variables-folder-btn',
     importVariablesBtn    : '.js-variables-import-btn',
+    exportVariablesBtn    : '.js-variables-export-btn',
   },
   events            : {
     'click @ui.addBtn'                : 'onClickAddBtn',
     'click @ui.openVariablesFolderBtn': 'onClickOpenVariablesFolderBtn',
     'click @ui.importVariablesBtn'    : 'onClickImportVariablesBtn',
-
-    'mouseenter @ui.handle': 'sortStart',
-    'mouseleave @ui.handle': 'sortDestroy'
+    'click @ui.exportVariablesBtn'    : 'onClickExportVariablesBtn',
+    'mouseenter @ui.handle'           : 'sortStart',
+    'mouseleave @ui.handle'           : 'sortDestroy'
   },
   collectionEvents  : {
     'add'   : 'badgeUpdate',
@@ -49,14 +50,17 @@ export default class SettingVariablesView extends CompositeView.extend( {
     }
   }
 
-  // noinspection JSMethodCanBeStatic
   onClickImportVariablesBtn () {
-    variablesCollection.importVariables()
+    this.collection.importVariables()
+  }
+
+  onClickExportVariablesBtn () {
+    this.collection.exportVariables()
   }
 
   // noinspection JSMethodCanBeStatic
   onClickOpenVariablesFolderBtn () {
-    variablesCollection.openVariablesFolder();
+    this.collection.openVariablesFolder();
   }
 
   //noinspection JSUnusedGlobalSymbols

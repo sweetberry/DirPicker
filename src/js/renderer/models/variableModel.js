@@ -1,6 +1,7 @@
 "use strict";
 
 import _ from 'underscore';
+import stringify from 'csv-stringify/lib/sync'
 import BaseModel from './baseModel';
 import VariableListCollection from '../collections/variableListCollection';
 
@@ -27,15 +28,15 @@ export default class VariableModel extends BaseModel {
      * @type {VariableListCollection}
      */
     this.listCollection = new VariableListCollection( this.get( 'list' ) );
-    this.listCollection.on( 'change', ()=> {
+    this.listCollection.on( 'change', () => {
       this.updateList();
     } );
-    this.listCollection.on( 'add remove', ()=> {
+    this.listCollection.on( 'add remove', () => {
       this.trigger( 'badgeUpdate' );
       this.updateList();
     } );
 
-    this.on( 'destroy', ()=> {
+    this.on( 'destroy', () => {
       this.listCollection.off();
     } );
   }
@@ -56,8 +57,12 @@ export default class VariableModel extends BaseModel {
    *
    */
   updateList () {
-    this.save( 'list', _.map( this.listCollection.sort( {silent: true} ).toJSON(), ( listRow )=> {
+    this.save( 'list', _.map( this.listCollection.sort( {silent: true} ).toJSON(), ( listRow ) => {
       return _.pick( listRow, 'label', 'val' );
     } ), {wait: true, silent: true} );
+  }
+
+  get csvString () {
+    return stringify( this.toJSON().list.map( ( row ) => {return [row.val, row.label]} ) );
   }
 }

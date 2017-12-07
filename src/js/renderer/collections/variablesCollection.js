@@ -4,7 +4,6 @@ import BaseCollection from './baseCollection'
 // noinspection JSUnresolvedVariable
 import {LocalStorage} from 'backbone.localstorage'
 import VariableModel from '../models/variableModel'
-// noinspection JSUnresolvedVariable
 // noinspection NpmUsedModulesInstalled
 import {remote} from 'electron'
 import path from 'path'
@@ -60,7 +59,51 @@ export class VariablesCollection extends BaseCollection {
 
   // noinspection JSMethodCanBeStatic
   importVariables () {
-    importVariables();
+    // console.log( this.length );
+    const files = fs.readdirSync( VAR_FOLDER_PATH );
+    files.forEach( ( filename ) => {
+      const ext = path.extname( filename );
+      if (ext !== '.csv') {
+        return;
+      }
+      try {
+        const input = fs.readFileSync( path.join( VAR_FOLDER_PATH, filename ) );
+        const data = parse( input, {relax_column_count: true} );
+        // noinspection JSUnresolvedFunction
+        const dataObjList = data.map( ( row ) => {
+          const label = (row.length > 1) ? row[1] : row[0];
+          const val = row[0];
+          return {val: val, label: label};
+        } );
+        const variableName = path.basename( filename, path.extname( filename ) );
+        // console.log( `filename:: ${filename}` );
+        // console.log( dataObjList );
+        // console.log( `variableName:: ${variableName}` );
+
+        let targetVariable = this.find( {name: variableName} );
+        // console.log( `targetVariable:: ${targetVariable}` );
+
+        // 同名variableは一旦削除
+        if (targetVariable) {
+          // console.log( `remove:${targetVariable.get( 'name' )}` );
+          targetVariable.destroy();
+          // console.log( this.length );
+        }
+        this.create( {name: variableName, list: dataObjList}, {wait: true} );
+        // console.log( `create:${variableName}` );
+        // console.log( this.length );
+      } catch (e) {
+        console.error( e );
+      }
+
+    } );
+  }
+
+  // noinspection JSMethodCanBeStatic
+  exportVariables () {
+    this.models.forEach( ( model ) => {
+      fs.writeFileSync( path.join( VAR_FOLDER_PATH, model.get( 'name' ) + '.csv' ), model.csvString );
+    } );
   }
 }
 
@@ -73,43 +116,6 @@ function ensureDefaultVariables () {
     // noinspection JSUnresolvedFunction
     fse.copySync( path.join( remote.app.getAppPath(), 'variables' ), VAR_FOLDER_PATH );
   }
-}
-
-function importVariables () {
-  // console.log( dirPickerVariablesCollection.length );
-  const files = fs.readdirSync( VAR_FOLDER_PATH );
-  files.forEach( ( filename ) => {
-    try {
-      const input = fs.readFileSync( path.join( VAR_FOLDER_PATH, filename ) );
-      const data = parse( input, {relax_column_count: true} );
-      // noinspection JSUnresolvedFunction
-      const dataObjList = data.map( ( row ) => {
-        const label = (row.length > 1) ? row[1] : row[0];
-        const val = row[0];
-        return {val: val, label: label};
-      } );
-      const variableName = path.basename( filename, path.extname( filename ) );
-      // console.log( `filename:: ${filename}` );
-      // console.log( dataObjList );
-      // console.log( `variableName:: ${variableName}` );
-
-      let targetVariable = dirPickerVariablesCollection.find( {name: variableName} );
-      // console.log( `targetVariable:: ${targetVariable}` );
-
-      // 同名variableは一旦削除
-      if (targetVariable) {
-        // console.log( `remove:${targetVariable.get( 'name' )}` );
-        targetVariable.destroy();
-        // console.log( dirPickerVariablesCollection.length );
-      }
-      dirPickerVariablesCollection.create( {name: variableName, list: dataObjList}, {wait: true} );
-      // console.log( `create:${variableName}` );
-      // console.log( dirPickerVariablesCollection.length );
-    } catch (e) {
-      console.error( e );
-    }
-
-  } );
 }
 
 // 起動時に一度実行します
